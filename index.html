@@ -150,9 +150,8 @@ function sizeWrap(n){wrap('[size='+n+']','[/size]')}function openColorPalette(){
 }
 function closeColorPalette(){document.getElementById('colorTray').classList.remove('open')}
 function setCurrentColor(hex,swatch){
- const picker=document.getElementById('freeColor');
- picker.value=hex.toLowerCase();
- document.getElementById('currentHex').textContent=hex.toUpperCase();
+ hex=hex.toUpperCase();
+ document.getElementById('currentHex').textContent=hex;
  document.getElementById('currentColorDisplay').style.background=hex;
  document.querySelectorAll('.colorDot').forEach(x=>x.classList.remove('selected'));
  if(swatch)swatch.classList.add('selected');
@@ -175,12 +174,7 @@ function updateFreePreview(){
 ['hueRange','satRange','lightRange'].forEach(id=>document.getElementById(id).addEventListener('input',updateFreePreview));
 function confirmFreeColor(){
  const hex=document.getElementById('freeHex').textContent.trim().toUpperCase();
- const display=document.getElementById('currentColorDisplay');
- const currentHex=document.getElementById('currentHex');
- currentHex.textContent=hex;
- display.style.background=hex;
- document.querySelectorAll('.colorDot').forEach(x=>x.classList.remove('selected'));
- document.getElementById('rainbowSwatch').classList.add('selected');
+ setCurrentColor(hex,document.getElementById('rainbowSwatch'));
  document.getElementById('freeColorPanel').classList.remove('open');
 }
 function applyCurrentColor(){
