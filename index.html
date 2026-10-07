@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f5f7">
-<title>しお✦あんエディタ v3.2</title>
+<title>しお✦あんエディタ v3.3</title>
 <style>
 :root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
 body.dark{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
@@ -49,7 +49,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 <div class="app">
 <header class="top">
  <div class="brandrow">
-  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.2</small></div>
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.3</small></div>
   <button id="mode" class="mode" onclick="toggleMode()" aria-label="ダークモード">🌙</button>
  </div>
  <div class="titleRow">
@@ -67,8 +67,8 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
   <div class="group">
    <button onclick="sizeWrap(10)">10</button><button onclick="sizeWrap(12)">12</button>
    <button onclick="sizeWrap(18)">18</button><button onclick="sizeWrap(32)">32</button>
-   <input id="customSize" class="num" type="number" min="1" max="99" value="14" aria-label="自由文字サイズ">
-   <button onclick="customSize()">適用</button>
+   <input id="customSize" class="num" type="number" min="10" max="32" value="14" inputmode="numeric" aria-label="自由文字サイズ">
+   <button onclick="customSize()">サイズ</button>
   </div>
   <span class="sep"></span>
   <div class="group"><input id="color" class="color" type="color" value="#ff0000" aria-label="文字色"><button onclick="wrapColor()">色</button></div>
@@ -93,7 +93,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 
 <div id="preview" class="previewOverlay">
  <div class="previewCard">
-  <div class="previewTop"><b>プレビュー　v3.2</b><button onclick="hidePreview()">閉じる</button></div>
+  <div class="previewTop"><b>プレビュー　v3.3</b><button onclick="hidePreview()">閉じる</button></div>
   <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
  </div>
 </div>
@@ -101,11 +101,11 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 <script>
 const title=document.getElementById('title'),body=document.getElementById('body'),tc=document.getElementById('tc'),bc=document.getElementById('bc'),tcBox=document.getElementById('tcBox'),bcBox=document.getElementById('bcBox'),pt=document.getElementById('pt'),pb=document.getElementById('pb');
 function wrap(a,b){const s=body.selectionStart,e=body.selectionEnd,v=body.value;body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);body.focus();body.setSelectionRange(s+a.length,e+a.length);changed()}
-function sizeWrap(n){wrap('[size='+n+']','[/size]')}function customSize(){const n=parseInt(document.getElementById('customSize').value);if(n>=1&&n<=99)sizeWrap(n)}
+function sizeWrap(n){wrap('[size='+n+']','[/size]')}function customSize(){let n=parseInt(document.getElementById('customSize').value,10);if(Number.isNaN(n))n=14;n=Math.max(10,Math.min(32,n));document.getElementById('customSize').value=n;sizeWrap(n)}
 function wrapColor(){wrap('[color='+document.getElementById('color').value.toUpperCase()+']','[/color]')}
 function addLink(){const u=prompt('リンク先URLを入力してください','https://');if(!u)return;const s=body.selectionStart,e=body.selectionEnd,v=body.value,t=v.slice(s,e)||'リンク';body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);body.focus();changed()}
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function render(s){let x=esc(s);return x.replace(/\[size=(\d{1,2})\]([\s\S]*?)\[\/size\]/gi,'<span style="font-size:$1px">$2</span>').replace(/\[color=(#[0-9A-Fa-f]{6})\]([\s\S]*?)\[\/color\]/gi,'<span style="color:$1">$2</span>').replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<b>$1</b>').replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<i>$1</i>').replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>').replace(/\[s\]([\s\S]*?)\[\/s\]/gi,'<s>$1</s>').replace(/\[center\]([\s\S]*?)\[\/center\]/gi,'<div style="text-align:center">$1</div>').replace(/\[right\]([\s\S]*?)\[\/right\]/gi,'<div style="text-align:right">$1</div>').replace(/\[left\]([\s\S]*?)\[\/left\]/gi,'<div style="text-align:left">$1</div>').replace(/\[url=([^\]]+)\]([\s\S]*?)\[\/url\]/gi,'<u>$2</u>').replace(/\[hb\]([\s\S]*?)\[\/hb\]/gi,'<span class="hidden">クリックして表示</span>')}
+function render(s){let x=esc(s);return x.replace(/\[size=(1\d|2\d|3[0-2])\]([\s\S]*?)\[\/size\]/gi,'<span style="font-size:$1px">$2</span>').replace(/\[color=(#[0-9A-Fa-f]{6})\]([\s\S]*?)\[\/color\]/gi,'<span style="color:$1">$2</span>').replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<b>$1</b>').replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<i>$1</i>').replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>').replace(/\[s\]([\s\S]*?)\[\/s\]/gi,'<s>$1</s>').replace(/\[center\]([\s\S]*?)\[\/center\]/gi,'<div style="text-align:center">$1</div>').replace(/\[right\]([\s\S]*?)\[\/right\]/gi,'<div style="text-align:right">$1</div>').replace(/\[left\]([\s\S]*?)\[\/left\]/gi,'<div style="text-align:left">$1</div>').replace(/\[url=([^\]]+)\]([\s\S]*?)\[\/url\]/gi,'<u>$2</u>').replace(/\[hb\]([\s\S]*?)\[\/hb\]/gi,'<span class="hidden">クリックして表示</span>')}
 function changed(){tc.textContent=title.value.length;bc.textContent=body.value.length;tcBox.classList.toggle('warn',title.value.length>=45);bcBox.classList.toggle('warn',body.value.length>=9500);localStorage.setItem('lodestoneTitle',title.value);localStorage.setItem('lodestoneBody',body.value)}
 function showPreview(){pt.textContent=title.value||'タイトル';pb.innerHTML=body.value?render(body.value):'ここにプレビューが表示されます。';document.getElementById('preview').classList.add('open')}
 function hidePreview(){document.getElementById('preview').classList.remove('open')}
