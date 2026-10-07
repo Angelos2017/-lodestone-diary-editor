@@ -54,6 +54,12 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 .freeColorInline span{font-size:11px;color:var(--muted)}
 .freeColorInline input[type=color]{position:static;width:38px;height:29px;opacity:1;pointer-events:auto;border:1px solid var(--line);border-radius:6px;padding:2px;background:var(--paper)}
 .freeColorInline button{height:29px}
+
+.rainbowDot{background:conic-gradient(#ff3030,#ffd43b,#46b95c,#38a9e8,#4d5ee8,#a64bd4,#ff3030)}
+.rainbowDot::after{content:'+';position:absolute;inset:0;display:grid;place-items:center;font-size:19px;font-weight:900;color:#fff;text-shadow:0 1px 4px #000}
+.currentColorDisplay{display:inline-block;width:38px;height:29px;border:1px solid var(--line);border-radius:6px;background:#ff0000}
+.nativeColorPicker{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+
 @media(max-width:390px){.brand{font-size:13px}.brand small{font-size:8px}}
 @media(max-height:600px){.top{padding-top:2px;padding-bottom:3px}.brandrow{height:22px}.mode{height:22px;min-height:22px}#title{height:29px}.toolbar{padding-top:2px}.editor{padding-top:3px}.bottom{padding-top:3px;padding-bottom:calc(3px + env(safe-area-inset-bottom))}}
 </style>
@@ -91,8 +97,8 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
  </div>
 <div id="colorTray" class="colorTray">
 <div class="colorTrayHead"><span>使用する文字色</span><button onclick="closeColorPalette()">閉じる</button></div>
-<div class="colorSwatches"><button class="colorDot" style="background:#000000" data-color="#000000" onclick="selectSwatch(this)" aria-label="#000000"></button><button class="colorDot" style="background:#666666" data-color="#666666" onclick="selectSwatch(this)" aria-label="#666666"></button><button class="colorDot" style="background:#FFFFFF" data-color="#FFFFFF" onclick="selectSwatch(this)" aria-label="#FFFFFF"></button><button class="colorDot selected" style="background:#FF0000" data-color="#FF0000" onclick="selectSwatch(this)" aria-label="#FF0000"></button><button class="colorDot" style="background:#FF7A00" data-color="#FF7A00" onclick="selectSwatch(this)" aria-label="#FF7A00"></button><button class="colorDot" style="background:#FFD400" data-color="#FFD400" onclick="selectSwatch(this)" aria-label="#FFD400"></button><button class="colorDot" style="background:#33A852" data-color="#33A852" onclick="selectSwatch(this)" aria-label="#33A852"></button><button class="colorDot" style="background:#00A6A6" data-color="#00A6A6" onclick="selectSwatch(this)" aria-label="#00A6A6"></button><button class="colorDot" style="background:#0088FF" data-color="#0088FF" onclick="selectSwatch(this)" aria-label="#0088FF"></button><button class="colorDot" style="background:#2457D6" data-color="#2457D6" onclick="selectSwatch(this)" aria-label="#2457D6"></button><button class="colorDot" style="background:#1A0A52" data-color="#1A0A52" onclick="selectSwatch(this)" aria-label="#1A0A52"></button><button class="colorDot" style="background:#7B3FC6" data-color="#7B3FC6" onclick="selectSwatch(this)" aria-label="#7B3FC6"></button><button class="colorDot" style="background:#E649A0" data-color="#E649A0" onclick="selectSwatch(this)" aria-label="#E649A0"></button><button class="colorDot" style="background:#8B4513" data-color="#8B4513" onclick="selectSwatch(this)" aria-label="#8B4513"></button><button class="colorDot" style="background:#B8860B" data-color="#B8860B" onclick="selectSwatch(this)" aria-label="#B8860B"></button><button class="colorDot" style="background:#A9A9A9" data-color="#A9A9A9" onclick="selectSwatch(this)" aria-label="#A9A9A9"></button></div>
-<div class="freeColorInline"><span>現在色</span><input id="freeColor" type="color" value="#ff0000" aria-label="現在の文字色"><span id="currentHex">#FF0000</span><button onclick="applyCurrentColor()">この色を使う</button></div>
+<div class="colorSwatches"><button class="colorDot" style="background:#000000" data-color="#000000" onclick="selectSwatch(this)" aria-label="#000000"></button><button class="colorDot" style="background:#666666" data-color="#666666" onclick="selectSwatch(this)" aria-label="#666666"></button><button class="colorDot" style="background:#FFFFFF" data-color="#FFFFFF" onclick="selectSwatch(this)" aria-label="#FFFFFF"></button><button class="colorDot selected" style="background:#FF0000" data-color="#FF0000" onclick="selectSwatch(this)" aria-label="#FF0000"></button><button class="colorDot" style="background:#FF7A00" data-color="#FF7A00" onclick="selectSwatch(this)" aria-label="#FF7A00"></button><button class="colorDot" style="background:#FFD400" data-color="#FFD400" onclick="selectSwatch(this)" aria-label="#FFD400"></button><button class="colorDot" style="background:#33A852" data-color="#33A852" onclick="selectSwatch(this)" aria-label="#33A852"></button><button class="colorDot" style="background:#00A6A6" data-color="#00A6A6" onclick="selectSwatch(this)" aria-label="#00A6A6"></button><button class="colorDot" style="background:#0088FF" data-color="#0088FF" onclick="selectSwatch(this)" aria-label="#0088FF"></button><button class="colorDot" style="background:#2457D6" data-color="#2457D6" onclick="selectSwatch(this)" aria-label="#2457D6"></button><button class="colorDot" style="background:#1A0A52" data-color="#1A0A52" onclick="selectSwatch(this)" aria-label="#1A0A52"></button><button class="colorDot" style="background:#7B3FC6" data-color="#7B3FC6" onclick="selectSwatch(this)" aria-label="#7B3FC6"></button><button class="colorDot" style="background:#E649A0" data-color="#E649A0" onclick="selectSwatch(this)" aria-label="#E649A0"></button><button class="colorDot" style="background:#8B4513" data-color="#8B4513" onclick="selectSwatch(this)" aria-label="#8B4513"></button><button class="colorDot" style="background:#B8860B" data-color="#B8860B" onclick="selectSwatch(this)" aria-label="#B8860B"></button><button class="colorDot" style="background:#A9A9A9" data-color="#A9A9A9" onclick="selectSwatch(this)" aria-label="#A9A9A9"></button><button id="rainbowSwatch" class="colorDot rainbowDot" onclick="openFreeColor()" aria-label="自由色" title="自由色"></button></div>
+<div class="freeColorInline"><span>現在色</span><span id="currentColorDisplay" class="currentColorDisplay" aria-hidden="true"></span><span id="currentHex">#FF0000</span><button onclick="applyCurrentColor()">この色を使う</button><input id="freeColor" type="color" value="#ff0000" aria-label="自由色" class="nativeColorPicker"></div>
 </div>
 </header>
 
@@ -131,12 +137,18 @@ function setCurrentColor(hex,swatch){
  const picker=document.getElementById('freeColor');
  picker.value=hex.toLowerCase();
  document.getElementById('currentHex').textContent=hex.toUpperCase();
+ document.getElementById('currentColorDisplay').style.background=hex;
  document.querySelectorAll('.colorDot').forEach(x=>x.classList.remove('selected'));
  if(swatch)swatch.classList.add('selected');
 }
 function selectSwatch(el){setCurrentColor(el.dataset.color,el)}
+function openFreeColor(){
+ const picker=document.getElementById('freeColor');
+ if(picker.showPicker){try{picker.showPicker();return}catch(e){}}
+ picker.click();
+}
 document.getElementById('freeColor').addEventListener('input',function(){
- setCurrentColor(this.value,null);
+ setCurrentColor(this.value,document.getElementById('rainbowSwatch'));
 });
 function applyCurrentColor(){
  const s=body.selectionStart,e=body.selectionEnd,v=body.value;
