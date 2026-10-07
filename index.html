@@ -47,7 +47,9 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 .colorTrayHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:11px;color:var(--muted)}
 .colorSwatches{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .colorSwatches::-webkit-scrollbar{display:none}
-.colorDot{flex:0 0 29px;width:29px;height:29px;min-height:29px;border-radius:7px;border:1px solid var(--line);padding:0}
+.colorDot{position:relative;flex:0 0 29px;width:29px;height:29px;min-height:29px;border-radius:7px;border:1px solid var(--line);padding:0}
+.colorDot.selected{outline:3px solid var(--ink);outline-offset:2px}
+.colorDot.selected::after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:17px;color:#fff;text-shadow:0 1px 3px #000}
 .freeColorInline{display:flex;align-items:center;gap:6px;margin-top:6px}
 .freeColorInline span{font-size:11px;color:var(--muted)}
 .freeColorInline input[type=color]{position:static;width:38px;height:29px;opacity:1;pointer-events:auto;border:1px solid var(--line);border-radius:6px;padding:2px;background:var(--paper)}
@@ -88,9 +90,9 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
   <div class="group"><button onclick="addLink()">リンク</button><button onclick="wrap('[hb]','[/hb]')">隠す</button></div><span class="sep"></span><div class="group"><button onclick="clearAll()">クリア</button></div>
  </div>
 <div id="colorTray" class="colorTray">
-<div class="colorTrayHead"><span>文字色を選択</span><button onclick="closeColorPalette()">閉じる</button></div>
-<div class="colorSwatches"><button class="colorDot" style="background:#000000" onclick="chooseColor(\'#000000\')" aria-label="#000000"></button><button class="colorDot" style="background:#666666" onclick="chooseColor(\'#666666\')" aria-label="#666666"></button><button class="colorDot" style="background:#FFFFFF" onclick="chooseColor(\'#FFFFFF\')" aria-label="#FFFFFF"></button><button class="colorDot" style="background:#FF0000" onclick="chooseColor(\'#FF0000\')" aria-label="#FF0000"></button><button class="colorDot" style="background:#FF7A00" onclick="chooseColor(\'#FF7A00\')" aria-label="#FF7A00"></button><button class="colorDot" style="background:#FFD400" onclick="chooseColor(\'#FFD400\')" aria-label="#FFD400"></button><button class="colorDot" style="background:#33A852" onclick="chooseColor(\'#33A852\')" aria-label="#33A852"></button><button class="colorDot" style="background:#00A6A6" onclick="chooseColor(\'#00A6A6\')" aria-label="#00A6A6"></button><button class="colorDot" style="background:#0088FF" onclick="chooseColor(\'#0088FF\')" aria-label="#0088FF"></button><button class="colorDot" style="background:#2457D6" onclick="chooseColor(\'#2457D6\')" aria-label="#2457D6"></button><button class="colorDot" style="background:#1A0A52" onclick="chooseColor(\'#1A0A52\')" aria-label="#1A0A52"></button><button class="colorDot" style="background:#7B3FC6" onclick="chooseColor(\'#7B3FC6\')" aria-label="#7B3FC6"></button><button class="colorDot" style="background:#E649A0" onclick="chooseColor(\'#E649A0\')" aria-label="#E649A0"></button><button class="colorDot" style="background:#8B4513" onclick="chooseColor(\'#8B4513\')" aria-label="#8B4513"></button><button class="colorDot" style="background:#B8860B" onclick="chooseColor(\'#B8860B\')" aria-label="#B8860B"></button><button class="colorDot" style="background:#A9A9A9" onclick="chooseColor(\'#A9A9A9\')" aria-label="#A9A9A9"></button></div>
-<div class="freeColorInline"><span>自由色</span><input id="freeColor" type="color" value="#ff0000" aria-label="自由色"><button onclick="chooseFreeColor()">この色を使う</button></div>
+<div class="colorTrayHead"><span>使用する文字色</span><button onclick="closeColorPalette()">閉じる</button></div>
+<div class="colorSwatches"><button class="colorDot" style="background:#000000" data-color="#000000" onclick="selectSwatch(this)" aria-label="#000000"></button><button class="colorDot" style="background:#666666" data-color="#666666" onclick="selectSwatch(this)" aria-label="#666666"></button><button class="colorDot" style="background:#FFFFFF" data-color="#FFFFFF" onclick="selectSwatch(this)" aria-label="#FFFFFF"></button><button class="colorDot selected" style="background:#FF0000" data-color="#FF0000" onclick="selectSwatch(this)" aria-label="#FF0000"></button><button class="colorDot" style="background:#FF7A00" data-color="#FF7A00" onclick="selectSwatch(this)" aria-label="#FF7A00"></button><button class="colorDot" style="background:#FFD400" data-color="#FFD400" onclick="selectSwatch(this)" aria-label="#FFD400"></button><button class="colorDot" style="background:#33A852" data-color="#33A852" onclick="selectSwatch(this)" aria-label="#33A852"></button><button class="colorDot" style="background:#00A6A6" data-color="#00A6A6" onclick="selectSwatch(this)" aria-label="#00A6A6"></button><button class="colorDot" style="background:#0088FF" data-color="#0088FF" onclick="selectSwatch(this)" aria-label="#0088FF"></button><button class="colorDot" style="background:#2457D6" data-color="#2457D6" onclick="selectSwatch(this)" aria-label="#2457D6"></button><button class="colorDot" style="background:#1A0A52" data-color="#1A0A52" onclick="selectSwatch(this)" aria-label="#1A0A52"></button><button class="colorDot" style="background:#7B3FC6" data-color="#7B3FC6" onclick="selectSwatch(this)" aria-label="#7B3FC6"></button><button class="colorDot" style="background:#E649A0" data-color="#E649A0" onclick="selectSwatch(this)" aria-label="#E649A0"></button><button class="colorDot" style="background:#8B4513" data-color="#8B4513" onclick="selectSwatch(this)" aria-label="#8B4513"></button><button class="colorDot" style="background:#B8860B" data-color="#B8860B" onclick="selectSwatch(this)" aria-label="#B8860B"></button><button class="colorDot" style="background:#A9A9A9" data-color="#A9A9A9" onclick="selectSwatch(this)" aria-label="#A9A9A9"></button></div>
+<div class="freeColorInline"><span>現在色</span><input id="freeColor" type="color" value="#ff0000" aria-label="現在の文字色"><span id="currentHex">#FF0000</span><button onclick="applyCurrentColor()">この色を使う</button></div>
 </div>
 </header>
 
@@ -122,24 +124,30 @@ function rememberSelection(){savedStart=body.selectionStart;savedEnd=body.select
 
 function wrap(a,b){let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const v=body.value;body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);body.focus();body.setSelectionRange(s+a.length,e+a.length);savedStart=s+a.length;savedEnd=e+a.length;changed()}
 function sizeWrap(n){wrap('[size='+n+']','[/size]')}function openColorPalette(){
- savedStart=body.selectionStart;
- savedEnd=body.selectionEnd;
  document.getElementById('colorTray').classList.toggle('open');
 }
 function closeColorPalette(){document.getElementById('colorTray').classList.remove('open')}
-function applyColorToSavedRange(hex){
- const s=savedStart,e=savedEnd,v=body.value;
- const a='[color='+hex.toUpperCase()+']',b='[/color]';
+function setCurrentColor(hex,swatch){
+ const picker=document.getElementById('freeColor');
+ picker.value=hex.toLowerCase();
+ document.getElementById('currentHex').textContent=hex.toUpperCase();
+ document.querySelectorAll('.colorDot').forEach(x=>x.classList.remove('selected'));
+ if(swatch)swatch.classList.add('selected');
+}
+function selectSwatch(el){setCurrentColor(el.dataset.color,el)}
+document.getElementById('freeColor').addEventListener('input',function(){
+ setCurrentColor(this.value,null);
+});
+function applyCurrentColor(){
+ const s=body.selectionStart,e=body.selectionEnd,v=body.value;
+ const hex=document.getElementById('freeColor').value.toUpperCase();
+ const a='[color='+hex+']',b='[/color]';
  body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);
  const ns=s+a.length,ne=e+a.length;
- savedStart=ns;savedEnd=ne;
  changed();
- closeColorPalette();
  body.focus();
  setTimeout(()=>body.setSelectionRange(ns,ne),0);
 }
-function chooseColor(hex){applyColorToSavedRange(hex)}
-function chooseFreeColor(){applyColorToSavedRange(document.getElementById('freeColor').value)}
 
 function addLink(){let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const u=prompt('リンク先URLを入力してください','https://');if(!u)return;const v=body.value,t=v.slice(s,e)||'リンク';body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);body.focus();savedStart=s;savedEnd=s+('[url='+u+']'+t+'[/url]').length;body.setSelectionRange(savedStart,savedEnd);changed()}
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
