@@ -1,42 +1,77 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f4f5f7"><title>ロドスト日記エディタ</title>
+<!doctype html>
+<html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f5f7"><title>ロドスト日記エディタ v3</title>
 <style>
-:root{--bg:#f4f5f7;--card:#fff;--ink:#25282d;--muted:#737a84;--line:#d6dbe0;--field:#fff;--btn:#fff;--accent:#365f82}
+:root{--bg:#f4f5f7;--card:#fff;--ink:#25282d;--muted:#747b84;--line:#d4d9df;--field:#fff;--btn:#fff;--accent:#365f82}
 body.dark{--bg:#17191d;--card:#22252a;--ink:#f1f3f5;--muted:#aab0b8;--line:#444950;--field:#191b1f;--btn:#2c3036;--accent:#527fa3}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",Meiryo,sans-serif}
-main{max-width:760px;margin:auto;padding:14px 12px 60px}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}h1{font-size:21px;margin:0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}label{display:block;font-weight:700;margin-bottom:7px}
-input,textarea,button{font:inherit;color:var(--ink);border:1px solid var(--line)}input,textarea{background:var(--field)}#title,textarea{width:100%;font-size:17px;border-radius:10px;padding:12px}
-textarea{min-height:350px;resize:vertical;line-height:1.65}.count{text-align:right;color:var(--muted);font-size:12px;margin-top:5px}
-.lab{font-size:12px;color:var(--muted);margin:11px 0 5px}.bar,.actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-button{min-height:42px;background:var(--btn);border-radius:9px;padding:7px 11px}.primary{background:var(--accent);color:white;border-color:var(--accent);font-weight:700}
-.num{width:67px;height:42px;border-radius:9px;padding:6px}.color{width:52px;height:42px;padding:3px;border-radius:9px}
-.previewTitle{font-size:22px;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:13px}.previewBody{font-family:Arial,"Yu Gothic",Meiryo,sans-serif;font-size:12px;line-height:1.65;white-space:pre-wrap;word-break:break-word;min-height:90px}
-.hidden{display:inline-block;background:#555;color:#fff;border-radius:3px;padding:2px 8px;font-size:12px}.note{font-size:12px;color:var(--muted)}
-</style></head><body><main>
-<header><h1>ロドスト日記エディタ</h1><button id="mode" onclick="toggleMode()">🌙 ダーク</button></header>
-<section class="card"><label>タイトル</label><input id="title" maxlength="50" placeholder="日記のタイトル"><div class="count"><span id="tc">0</span> / 50</div></section>
-<section class="card"><label>本文</label>
-<div class="lab">文字サイズ</div><div class="bar">
-<button onclick="sizeWrap(10)">10</button><button onclick="sizeWrap(12)">12</button><button onclick="sizeWrap(18)">18</button><button onclick="sizeWrap(32)">32</button>
-<input id="customSize" class="num" type="number" min="1" max="99" value="14"><button onclick="customSize()">適用</button></div>
-<div class="lab">文字色</div><div class="bar"><input id="color" class="color" type="color" value="#ffffff"><button onclick="wrapColor()">適用</button></div>
-<div class="lab">装飾・配置</div><div class="bar">
-<button onclick="wrap('[b]','[/b]')"><b>B</b></button><button onclick="wrap('[i]','[/i]')"><i>I</i></button><button onclick="wrap('[u]','[/u]')"><u>U</u></button><button onclick="wrap('[s]','[/s]')"><s>S</s></button>
-<button onclick="wrap('[left]','[/left]')">左</button><button onclick="wrap('[center]','[/center]')">中央</button><button onclick="wrap('[right]','[/right]')">右</button><button onclick="addLink()">リンク</button><button onclick="wrap('[hb]','[/hb]')">隠す</button></div>
-<br><textarea id="body" maxlength="10000" placeholder="ここに日記を書きます"></textarea><div class="count"><span id="bc">0</span> / 10000</div>
-<div class="actions"><button class="primary" onclick="copyTitle()">タイトルをコピー</button><button class="primary" onclick="copyBody()">本文をコピー</button></div></section>
-<section class="card"><label>プレビュー</label><div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody">ここにプレビューが表示されます。</div></section>
-<p class="note">下書きと表示モードは、このブラウザ内に自動保存されます。</p>
-</main><script>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",Meiryo,sans-serif}
+.app{height:100dvh;max-width:760px;margin:auto;display:flex;flex-direction:column}
+.top{flex:0 0 auto;background:var(--card);border-bottom:1px solid var(--line);padding:8px 10px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+h1{font-size:17px;margin:0}.mode{min-width:42px}
+.titleRow{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+input,textarea,button{font:inherit;color:var(--ink);border:1px solid var(--line)}
+#title{width:100%;height:38px;background:var(--field);border-radius:8px;padding:8px 10px;font-size:16px}
+.count{font-size:11px;color:var(--muted);white-space:nowrap}
+.tools{display:flex;gap:5px;overflow-x:auto;padding:7px 0 1px;scrollbar-width:none}.tools::-webkit-scrollbar{display:none}
+button{flex:0 0 auto;min-height:36px;background:var(--btn);border-radius:8px;padding:5px 9px;font-size:14px}
+button:active{transform:translateY(1px)}.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.color{width:39px;height:36px;padding:2px;border-radius:8px;background:var(--field)}
+.num{width:56px;height:36px;border-radius:8px;background:var(--field);padding:5px;text-align:center}
+.editor{flex:1 1 auto;min-height:0;padding:8px 10px 7px;display:flex;flex-direction:column;background:var(--bg)}
+.editorHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:12px;color:var(--muted)}
+textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--field);border-radius:10px;padding:12px;font-size:17px;line-height:1.6}
+.bottom{flex:0 0 auto;display:flex;gap:6px;padding:7px 10px calc(7px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line)}
+.bottom button{flex:1}.previewOverlay{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;overflow:auto;padding:12px}
+.previewOverlay.open{display:block}.previewCard{max-width:760px;margin:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.previewTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.previewTitle{font-size:22px;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:13px}
+.previewBody{font-family:Arial,"Yu Gothic",Meiryo,sans-serif;font-size:12px;line-height:1.65;white-space:pre-wrap;word-break:break-word;min-height:120px}
+.hidden{display:inline-block;background:#555;color:white;padding:2px 8px;border-radius:3px;font-size:12px}
+@media(max-height:600px){.head{display:none}.top{padding-top:5px}.tools{padding-top:5px}}
+</style></head><body>
+<div class="app">
+ <div class="top">
+  <div class="head"><h1>ロドスト日記エディタ</h1><button id="mode" class="mode" onclick="toggleMode()">🌙</button></div>
+  <div class="titleRow"><input id="title" maxlength="50" placeholder="タイトル"><span class="count"><span id="tc">0</span>/50</span></div>
+  <div class="tools">
+   <button onclick="sizeWrap(10)">10</button><button onclick="sizeWrap(12)">12</button><button onclick="sizeWrap(18)">18</button><button onclick="sizeWrap(32)">32</button>
+   <input id="customSize" class="num" type="number" min="1" max="99" value="14" aria-label="自由サイズ"><button onclick="customSize()">適用</button>
+   <input id="color" class="color" type="color" value="#ffffff" aria-label="文字色"><button onclick="wrapColor()">色適用</button>
+   <button onclick="wrap('[b]','[/b]')"><b>B</b></button><button onclick="wrap('[i]','[/i]')"><i>I</i></button><button onclick="wrap('[u]','[/u]')"><u>U</u></button><button onclick="wrap('[s]','[/s]')"><s>S</s></button>
+   <button onclick="wrap('[left]','[/left]')">左</button><button onclick="wrap('[center]','[/center]')">中</button><button onclick="wrap('[right]','[/right]')">右</button>
+   <button onclick="addLink()">リンク</button><button onclick="wrap('[hb]','[/hb]')">隠す</button>
+  </div>
+ </div>
+ <div class="editor">
+  <div class="editorHead"><b>本文</b><span><span id="bc">0</span>/10000</span></div>
+  <textarea id="body" maxlength="10000" placeholder="ここに日記を書きます"></textarea>
+ </div>
+ <div class="bottom">
+  <button onclick="showPreview()">プレビュー</button>
+  <button onclick="copyTitle()">タイトルコピー</button>
+  <button class="accent" onclick="copyBody()">本文コピー</button>
+ </div>
+</div>
+<div id="preview" class="previewOverlay">
+ <div class="previewCard">
+  <div class="previewTop"><b>プレビュー</b><button onclick="hidePreview()">閉じる</button></div>
+  <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
+ </div>
+</div>
+<script>
 const title=document.getElementById('title'),body=document.getElementById('body'),tc=document.getElementById('tc'),bc=document.getElementById('bc'),pt=document.getElementById('pt'),pb=document.getElementById('pb');
 function wrap(a,b){let s=body.selectionStart,e=body.selectionEnd,v=body.value;body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);body.focus();body.setSelectionRange(s+a.length,e+a.length);changed()}
 function sizeWrap(n){wrap('[size='+n+']','[/size]')}function customSize(){let n=parseInt(document.getElementById('customSize').value);if(n>=1&&n<=99)sizeWrap(n)}
 function wrapColor(){wrap('[color='+document.getElementById('color').value.toUpperCase()+']','[/color]')}
-function addLink(){let u=prompt('リンク先URLを入力してください','https://');if(!u)return;let s=body.selectionStart,e=body.selectionEnd,v=body.value,t=v.slice(s,e)||'リンク';body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);changed()}
+function addLink(){let u=prompt('リンク先URLを入力してください','https://');if(!u)return;let s=body.selectionStart,e=body.selectionEnd,v=body.value,t=v.slice(s,e)||'リンク';body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);body.focus();changed()}
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function render(s){let x=esc(s);return x.replace(/\[size=(\d{1,2})\]([\s\S]*?)\[\/size\]/gi,'<span style="font-size:$1px">$2</span>').replace(/\[color=(#[0-9A-Fa-f]{6})\]([\s\S]*?)\[\/color\]/gi,'<span style="color:$1">$2</span>').replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<b>$1</b>').replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<i>$1</i>').replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>').replace(/\[s\]([\s\S]*?)\[\/s\]/gi,'<s>$1</s>').replace(/\[center\]([\s\S]*?)\[\/center\]/gi,'<div style="text-align:center">$1</div>').replace(/\[right\]([\s\S]*?)\[\/right\]/gi,'<div style="text-align:right">$1</div>').replace(/\[left\]([\s\S]*?)\[\/left\]/gi,'<div style="text-align:left">$1</div>').replace(/\[url=([^\]]+)\]([\s\S]*?)\[\/url\]/gi,'<u>$2</u>').replace(/\[hb\]([\s\S]*?)\[\/hb\]/gi,'<span class="hidden">クリックして表示</span>')}
-function changed(){tc.textContent=title.value.length;bc.textContent=body.value.length;pt.textContent=title.value||'タイトル';pb.innerHTML=body.value?render(body.value):'ここにプレビューが表示されます。';localStorage.setItem('lodestoneTitle',title.value);localStorage.setItem('lodestoneBody',body.value)}
+function changed(){tc.textContent=title.value.length;bc.textContent=body.value.length;localStorage.setItem('lodestoneTitle',title.value);localStorage.setItem('lodestoneBody',body.value)}
+function showPreview(){pt.textContent=title.value||'タイトル';pb.innerHTML=body.value?render(body.value):'ここにプレビューが表示されます。';document.getElementById('preview').classList.add('open')}
+function hidePreview(){document.getElementById('preview').classList.remove('open')}
 async function cp(s,m){try{await navigator.clipboard.writeText(s);alert(m)}catch(e){prompt('コピーしてください',s)}}function copyTitle(){cp(title.value,'タイトルをコピーしました')}function copyBody(){cp(body.value,'本文をコピーしました')}
-function mode(d){document.body.classList.toggle('dark',d);document.getElementById('mode').textContent=d?'☀️ ライト':'🌙 ダーク';localStorage.setItem('lodestoneDark',d?'1':'0')}function toggleMode(){mode(!document.body.classList.contains('dark'))}
+function mode(d){document.body.classList.toggle('dark',d);document.getElementById('mode').textContent=d?'☀️':'🌙';localStorage.setItem('lodestoneDark',d?'1':'0')}function toggleMode(){mode(!document.body.classList.contains('dark'))}
 title.value=localStorage.getItem('lodestoneTitle')||'';body.value=localStorage.getItem('lodestoneBody')||'';mode(localStorage.getItem('lodestoneDark')==='1');title.oninput=changed;body.oninput=changed;changed();
 </script></body></html>
