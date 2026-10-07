@@ -77,10 +77,9 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
   flex:0 0 auto;
   text-align:center;
   font-size:9px;
-  line-height:1.25;
-  opacity:.58;
-  padding:3px 6px 4px;
-  white-space:normal;
+  line-height:1.2;
+  opacity:.60;
+  padding:2px 6px 3px;
 }
 
 </style>
@@ -125,7 +124,8 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
  <label>色相 <input id="hueRange" type="range" min="0" max="360" value="0"></label>
  <label>鮮やかさ <input id="satRange" type="range" min="0" max="100" value="100"></label>
  <label>明るさ <input id="lightRange" type="range" min="0" max="100" value="50"></label>
- <div class="freeColorBottom"><span id="freePreview" class="freePreview"></span><span id="freeHex">#FF0000</span><button onclick="confirmFreeColor()">この色にする</button></div>
+ <div class="fan-notice">FINAL FANTASY XIV The Lodestone向けに個人制作した非公式ファンツールです<br>公式サービスとは関係ありません</div>
+<div class="freeColorBottom"><span id="freePreview" class="freePreview"></span><span id="freeHex">#FF0000</span><button onclick="confirmFreeColor()">この色にする</button></div>
 </div>
 </header>
 
@@ -150,7 +150,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 </div>
 
 
-<div class="fan-notice">FINAL FANTASY XIV The Lodestone向けに個人制作した非公式ファンツールです<br>公式サービスとは関係ありません</div>
+
 <script>
 const title=document.getElementById('title'),body=document.getElementById('body'),tc=document.getElementById('tc'),bc=document.getElementById('bc'),tcBox=document.getElementById('tcBox'),bcBox=document.getElementById('bcBox'),pt=document.getElementById('pt'),pb=document.getElementById('pb');
 let savedStart=0,savedEnd=0;
