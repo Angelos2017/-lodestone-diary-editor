@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f5f7">
-<title>しお✦あんエディタ v3.7</title>
+<title>しお✦あんエディタ v3.8</title>
 <style>
 :root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
 body.dark{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
@@ -60,7 +60,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 <div class="app">
 <header class="top">
  <div class="brandrow">
-  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.7</small></div>
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.8</small></div>
   <button id="mode" class="mode" onclick="toggleMode()" aria-label="ダークモード">🌙</button>
  </div>
  <div class="titleRow">
@@ -73,10 +73,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
   </div>
   <span class="sep"></span>
   <div class="group">
-   <button onclick="sizeWrap(10)">10</button><button onclick="sizeWrap(12)">12</button>
-   <button onclick="sizeWrap(18)">18</button><button onclick="sizeWrap(32)">32</button>
-   <input id="customSize" class="num" type="number" min="10" max="32" value="14" inputmode="numeric" aria-label="自由文字サイズ 10から32">
-   <button onclick="customSize()">サイズ</button>
+   <button onclick="sizeWrap(10)">10</button><button onclick="sizeWrap(12)">12</button><button onclick="sizeWrap(18)">18</button><button onclick="sizeWrap(24)">24</button><button onclick="sizeWrap(32)">32</button>
   </div>
   <span class="sep"></span>
   <div class="group">
@@ -88,7 +85,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
   <span class="sep"></span>
   <div class="group"><button onclick="wrap('[left]','[/left]')">左</button><button onclick="wrap('[center]','[/center]')">中</button><button onclick="wrap('[right]','[/right]')">右</button></div>
   <span class="sep"></span>
-  <div class="group"><button onclick="addLink()">リンク</button><button onclick="wrap('[hb]','[/hb]')">隠す</button></div>
+  <div class="group"><button onclick="addLink()">リンク</button><button onclick="wrap('[hb]','[/hb]')">隠す</button></div><span class="sep"></span><div class="group"><button onclick="clearAll()">クリア</button></div>
  </div>
 <div id="colorTray" class="colorTray">
 <div class="colorTrayHead"><span>文字色を選択</span><button onclick="closeColorPalette()">閉じる</button></div>
@@ -112,7 +109,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 
 <div id="preview" class="previewOverlay">
  <div class="previewCard">
-  <div class="previewTop"><b>プレビュー　v3.7</b><button onclick="hidePreview()">閉じる</button></div>
+  <div class="previewTop"><b>プレビュー　v3.8</b><button onclick="hidePreview()">閉じる</button></div>
   <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
  </div>
 </div>
@@ -124,21 +121,22 @@ function rememberSelection(){savedStart=body.selectionStart;savedEnd=body.select
 ['select','keyup','mouseup','touchend','input'].forEach(ev=>body.addEventListener(ev,rememberSelection));
 
 function wrap(a,b){let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const v=body.value;body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);body.focus();body.setSelectionRange(s+a.length,e+a.length);savedStart=s+a.length;savedEnd=e+a.length;changed()}
-function sizeWrap(n){wrap('[size='+n+']','[/size]')}function customSize(){let n=parseInt(document.getElementById('customSize').value,10);if(Number.isNaN(n))n=14;n=Math.max(10,Math.min(32,n));document.getElementById('customSize').value=n;sizeWrap(n)}
-function openColorPalette(){
- rememberSelection();
+function sizeWrap(n){wrap('[size='+n+']','[/size]')}function openColorPalette(){
+ savedStart=body.selectionStart;
+ savedEnd=body.selectionEnd;
  document.getElementById('colorTray').classList.toggle('open');
 }
 function closeColorPalette(){document.getElementById('colorTray').classList.remove('open')}
 function applyColorToSavedRange(hex){
- const a='[color='+hex.toUpperCase()+']',b='[/color]';
  const s=savedStart,e=savedEnd,v=body.value;
+ const a='[color='+hex.toUpperCase()+']',b='[/color]';
  body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);
- savedStart=s+a.length;savedEnd=e+a.length;
+ const ns=s+a.length,ne=e+a.length;
+ savedStart=ns;savedEnd=ne;
  changed();
  closeColorPalette();
  body.focus();
- setTimeout(()=>body.setSelectionRange(savedStart,savedEnd),0);
+ setTimeout(()=>body.setSelectionRange(ns,ne),0);
 }
 function chooseColor(hex){applyColorToSavedRange(hex)}
 function chooseFreeColor(){applyColorToSavedRange(document.getElementById('freeColor').value)}
@@ -150,6 +148,14 @@ function changed(){tc.textContent=title.value.length;bc.textContent=body.value.l
 function showPreview(){pt.textContent=title.value||'タイトル';pb.innerHTML=body.value?render(body.value):'ここにプレビューが表示されます。';document.getElementById('preview').classList.add('open')}
 function hidePreview(){document.getElementById('preview').classList.remove('open')}
 async function cp(s,m){try{await navigator.clipboard.writeText(s);alert(m)}catch(e){prompt('コピーしてください',s)}}function copyTitle(){cp(title.value,'タイトルをコピーしました')}function copyBody(){cp(body.value,'本文をコピーしました')}
+function clearAll(){
+ if(!title.value&&!body.value)return;
+ if(!confirm('タイトルと本文をすべて消しますか？'))return;
+ title.value='';body.value='';savedStart=0;savedEnd=0;
+ localStorage.removeItem('lodestoneTitle');
+ localStorage.removeItem('lodestoneBody');
+ changed();body.focus();
+}
 function mode(d){document.body.classList.toggle('dark',d);document.getElementById('mode').textContent=d?'☀️':'🌙';localStorage.setItem('lodestoneDark',d?'1':'0')}function toggleMode(){mode(!document.body.classList.contains('dark'))}
 title.value=localStorage.getItem('lodestoneTitle')||'';body.value=localStorage.getItem('lodestoneBody')||'';mode(localStorage.getItem('lodestoneDark')==='1');title.oninput=changed;body.oninput=changed;changed();rememberSelection();
 </script>
