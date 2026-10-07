@@ -72,6 +72,15 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 
 @media(max-width:390px){.brand{font-size:13px}.brand small{font-size:8px}}
 @media(max-height:600px){.top{padding-top:2px;padding-bottom:3px}.brandrow{height:22px}.mode{height:22px;min-height:22px}#title{height:29px}.toolbar{padding-top:2px}.editor{padding-top:3px}.bottom{padding-top:3px;padding-bottom:calc(3px + env(safe-area-inset-bottom))}}
+
+.fan-notice{
+  text-align:center;
+  font-size:11px;
+  line-height:1.5;
+  opacity:.62;
+  padding:8px 12px 10px;
+}
+
 </style>
 </head>
 <body>
@@ -138,6 +147,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
  </div>
 </div>
 
+<div class="fan-notice">FINAL FANTASY XIV The Lodestone向けに個人制作した非公式ファンツールです<br>公式サービスとは関係ありません</div>
 <script>
 const title=document.getElementById('title'),body=document.getElementById('body'),tc=document.getElementById('tc'),bc=document.getElementById('bc'),tcBox=document.getElementById('tcBox'),bcBox=document.getElementById('bcBox'),pt=document.getElementById('pt'),pb=document.getElementById('pb');
 let savedStart=0,savedEnd=0;
