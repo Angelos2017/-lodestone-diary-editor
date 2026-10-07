@@ -174,12 +174,24 @@ function updateFreePreview(){
 }
 ['hueRange','satRange','lightRange'].forEach(id=>document.getElementById(id).addEventListener('input',updateFreePreview));
 function confirmFreeColor(){
- const hex=document.getElementById('freeHex').textContent;
- setCurrentColor(hex,document.getElementById('rainbowSwatch'));
+ const hex=document.getElementById('freeHex').textContent.trim().toUpperCase();
+ const display=document.getElementById('currentColorDisplay');
+ const currentHex=document.getElementById('currentHex');
+ currentHex.textContent=hex;
+ display.style.background=hex;
+ document.querySelectorAll('.colorDot').forEach(x=>x.classList.remove('selected'));
+ document.getElementById('rainbowSwatch').classList.add('selected');
  document.getElementById('freeColorPanel').classList.remove('open');
 }
 function applyCurrentColor(){
- let s=body.selectionStart,e=body.selectionEnd,v=body.value;
+ let s=body.selectionStart,e=body.selectionEnd;
+ if(s===e){
+   alert('色を変える文字を選択してください');
+   body.focus();
+   return;
+ }
+
+ const v=body.value;
  const hex=document.getElementById('currentHex').textContent.toUpperCase();
  const open='[color='+hex+']',close='[/color]';
 
