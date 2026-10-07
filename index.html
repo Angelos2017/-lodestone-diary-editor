@@ -4,266 +4,113 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f5f7">
-<title>しお✦あんエディタ v3.1</title>
+<title>しお✦あんエディタ v3.2</title>
 <style>
-:root{
- --bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;
- --btn:#fff;--accent:#426783;--warn:#c43b3b;
-}
-body.dark{
- --bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;
- --btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777;
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;overflow:hidden}
-body{
- background:var(--bg);color:var(--ink);
- font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",Meiryo,sans-serif;
-}
-.app{
- height:100dvh;max-width:760px;margin:auto;
- display:flex;flex-direction:column;
-}
-.top{
- flex:0 0 auto;background:var(--paper);
- border-bottom:1px solid var(--line);
- padding:6px 9px 5px;
-}
-.brandrow{
- height:28px;display:flex;align-items:center;gap:6px;min-width:0;
-}
-.brand{
- min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
- font-weight:700;font-size:15px;letter-spacing:.01em;
-}
-.brand small{font-weight:400;font-size:10px;color:var(--muted);margin-left:5px}
-.mode{height:28px;min-height:28px;padding:2px 7px}
-.titleRow{
- display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px;align-items:center;
- margin-top:4px;
-}
+:root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
+body.dark{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",Meiryo,sans-serif}
+.app{height:100dvh;max-width:760px;margin:auto;display:flex;flex-direction:column}
+.top{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:4px 8px}
+.brandrow{height:25px;display:flex;align-items:center;gap:5px;min-width:0}
+.brand{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;font-size:14px}
+.brand small{font-weight:400;font-size:9px;color:var(--muted);margin-left:4px}
 input,textarea,button{font:inherit;color:var(--ink);border:1px solid var(--line)}
-#title{
- width:100%;height:34px;background:var(--paper);border-radius:8px;
- padding:6px 9px;font-size:16px;outline:none;
-}
-#title:focus,textarea:focus{border-color:var(--accent)}
-.counter{font-size:10px;color:var(--muted);white-space:nowrap;min-width:36px;text-align:right}
-.counter.warn{color:var(--warn);font-weight:700}
-.toolbar{
- display:flex;align-items:center;gap:4px;overflow-x:auto;
- padding-top:5px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
-}
-.toolbar::-webkit-scrollbar{display:none}
-.group{display:flex;gap:4px;align-items:center;flex:0 0 auto}
-.sep{width:1px;height:23px;background:var(--line);margin:0 2px;flex:0 0 auto}
-button{
- flex:0 0 auto;height:32px;min-height:32px;background:var(--btn);
- border-radius:7px;padding:3px 8px;font-size:13px;
-}
+button{flex:0 0 auto;height:28px;min-height:28px;background:var(--btn);border-radius:6px;padding:2px 6px;font-size:12px}
 button:active{transform:translateY(1px)}
-.iconbtn{min-width:32px;padding:3px 7px}
-.accent{background:var(--accent);color:white;border-color:var(--accent)}
-.num{
- width:48px;height:32px;border-radius:7px;background:var(--paper);
- padding:3px 4px;text-align:center;font-size:13px;
-}
-.color{
- width:34px;height:32px;padding:2px;border-radius:7px;background:var(--paper);
-}
-.editor{
- flex:1 1 auto;min-height:0;padding:6px 9px;
- display:flex;flex-direction:column;background:var(--bg);
-}
-.editorHead{
- flex:0 0 auto;height:20px;display:flex;justify-content:space-between;
- align-items:center;font-size:11px;color:var(--muted);padding:0 2px 3px;
-}
-textarea{
- flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;
- -webkit-overflow-scrolling:touch;background:var(--paper);
- border-radius:11px;padding:12px 13px;font-size:17px;line-height:1.65;
- outline:none;box-shadow:0 1px 3px rgba(0,0,0,.04);
-}
-.bottom{
- flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:5px;
- padding:5px 9px calc(5px + env(safe-area-inset-bottom));
- background:var(--paper);border-top:1px solid var(--line);
-}
-.bottom button{height:32px;min-height:32px;padding:3px 5px;font-size:12px}
-.previewOverlay{
- position:fixed;inset:0;background:var(--bg);z-index:20;
- display:none;overflow:auto;padding:10px;
-}
-.previewOverlay.open{display:block}
-.previewCard{
- max-width:760px;margin:auto;background:var(--paper);
- border:1px solid var(--line);border-radius:12px;padding:13px;
-}
-.previewTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
-.previewTitle{
- font-size:21px;font-weight:700;border-bottom:1px solid var(--line);
- padding-bottom:8px;margin-bottom:11px;
-}
-.previewBody{
- font-family:Arial,"Yu Gothic",Meiryo,sans-serif;font-size:12px;line-height:1.65;
- white-space:pre-wrap;word-break:break-word;min-height:120px;
-}
-.hidden{
- display:inline-block;background:#555;color:#fff;padding:2px 8px;
- border-radius:3px;font-size:12px;
-}
-@media(max-width:390px){
- .brand{font-size:14px}.brand small{font-size:9px;margin-left:3px}
-}
-@media(max-height:590px){
- .brandrow{height:23px}.mode{height:23px;min-height:23px}
- .top{padding-top:3px}.titleRow{margin-top:2px}.toolbar{padding-top:3px}
- #title{height:31px}.editor{padding-top:4px;padding-bottom:4px}
- .bottom{padding-top:3px}
-}
+.mode{height:25px;min-height:25px;min-width:31px;padding:1px 5px}
+.titleRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px;align-items:center;margin-top:2px}
+#title{width:100%;height:31px;background:var(--paper);border-radius:7px;padding:4px 8px;font-size:15px;outline:none}
+#title:focus,textarea:focus{border-color:var(--accent)}
+.counter{font-size:9px;color:var(--muted);white-space:nowrap;min-width:33px;text-align:right}
+.counter.warn{color:var(--warn);font-weight:700}
+.toolbar{display:flex;align-items:center;gap:3px;overflow-x:auto;padding-top:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.toolbar::-webkit-scrollbar{display:none}.group{display:flex;gap:3px;align-items:center;flex:0 0 auto}
+.sep{width:1px;height:19px;background:var(--line);margin:0 1px;flex:0 0 auto}
+.iconbtn{min-width:29px;padding:2px 5px}
+.num{width:42px;height:28px;border-radius:6px;background:var(--paper);padding:2px 3px;text-align:center;font-size:12px}
+.color{width:30px;height:28px;padding:2px;border-radius:6px;background:var(--paper)}
+.editor{position:relative;flex:1 1 auto;min-height:0;padding:4px 8px 5px;display:flex;background:var(--bg)}
+textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--paper);border-radius:10px;padding:10px 12px 22px;font-size:17px;line-height:1.65;outline:none;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.bodyCount{position:absolute;right:15px;bottom:9px;z-index:2;padding:1px 4px;border-radius:5px;background:color-mix(in srgb,var(--paper) 88%,transparent);font-size:9px;color:var(--muted);pointer-events:none}
+.bodyCount.warn{color:var(--warn);font-weight:700}
+.bottom{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:4px;padding:4px 8px calc(4px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--line)}
+.bottom button{height:29px;min-height:29px;padding:2px 4px;font-size:11px}.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.previewOverlay{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;overflow:auto;padding:10px}.previewOverlay.open{display:block}
+.previewCard{max-width:760px;margin:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:13px}
+.previewTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.previewTitle{font-size:21px;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:11px}
+.previewBody{font-family:Arial,"Yu Gothic",Meiryo,sans-serif;font-size:12px;line-height:1.65;white-space:pre-wrap;word-break:break-word;min-height:120px}
+.hidden{display:inline-block;background:#555;color:#fff;padding:2px 8px;border-radius:3px;font-size:12px}
+@media(max-width:390px){.brand{font-size:13px}.brand small{font-size:8px}}
+@media(max-height:600px){.top{padding-top:2px;padding-bottom:3px}.brandrow{height:22px}.mode{height:22px;min-height:22px}#title{height:29px}.toolbar{padding-top:2px}.editor{padding-top:3px}.bottom{padding-top:3px;padding-bottom:calc(3px + env(safe-area-inset-bottom))}}
 </style>
 </head>
 <body>
 <div class="app">
- <header class="top">
-  <div class="brandrow">
-   <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.1</small></div>
-   <button id="mode" class="mode iconbtn" onclick="toggleMode()" aria-label="ダークモード">🌙</button>
+<header class="top">
+ <div class="brandrow">
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.2</small></div>
+  <button id="mode" class="mode" onclick="toggleMode()" aria-label="ダークモード">🌙</button>
+ </div>
+ <div class="titleRow">
+  <input id="title" maxlength="50" placeholder="タイトル">
+  <span id="tcBox" class="counter"><span id="tc">0</span>/50</span>
+ </div>
+ <div class="toolbar">
+  <div class="group">
+   <button class="iconbtn" onclick="wrap('[b]','[/b]')"><b>B</b></button>
+   <button class="iconbtn" onclick="wrap('[u]','[/u]')"><u>U</u></button>
+   <button class="iconbtn" onclick="wrap('[i]','[/i]')"><i>I</i></button>
+   <button class="iconbtn" onclick="wrap('[s]','[/s]')"><s>S</s></button>
   </div>
-
-  <div class="titleRow">
-   <input id="title" maxlength="50" placeholder="タイトル">
-   <span id="tcBox" class="counter"><span id="tc">0</span>/50</span>
+  <span class="sep"></span>
+  <div class="group">
+   <button onclick="sizeWrap(10)">10</button><button onclick="sizeWrap(12)">12</button>
+   <button onclick="sizeWrap(18)">18</button><button onclick="sizeWrap(32)">32</button>
+   <input id="customSize" class="num" type="number" min="1" max="99" value="14" aria-label="自由文字サイズ">
+   <button onclick="customSize()">適用</button>
   </div>
+  <span class="sep"></span>
+  <div class="group"><input id="color" class="color" type="color" value="#ff0000" aria-label="文字色"><button onclick="wrapColor()">色</button></div>
+  <span class="sep"></span>
+  <div class="group"><button onclick="wrap('[left]','[/left]')">左</button><button onclick="wrap('[center]','[/center]')">中</button><button onclick="wrap('[right]','[/right]')">右</button></div>
+  <span class="sep"></span>
+  <div class="group"><button onclick="addLink()">リンク</button><button onclick="wrap('[hb]','[/hb]')">隠す</button></div>
+ </div>
+</header>
 
-  <div class="toolbar" aria-label="書式ツール">
-   <div class="group">
-    <button class="iconbtn" onclick="wrap('[b]','[/b]')"><b>B</b></button>
-    <button class="iconbtn" onclick="wrap('[u]','[/u]')"><u>U</u></button>
-    <button class="iconbtn" onclick="wrap('[i]','[/i]')"><i>I</i></button>
-    <button class="iconbtn" onclick="wrap('[s]','[/s]')"><s>S</s></button>
-   </div>
-   <span class="sep"></span>
-   <div class="group">
-    <button onclick="sizeWrap(10)">10</button><button onclick="sizeWrap(12)">12</button>
-    <button onclick="sizeWrap(18)">18</button><button onclick="sizeWrap(32)">32</button>
-    <input id="customSize" class="num" type="number" min="1" max="99" value="14" aria-label="自由文字サイズ">
-    <button onclick="customSize()">適用</button>
-   </div>
-   <span class="sep"></span>
-   <div class="group">
-    <input id="color" class="color" type="color" value="#ff0000" aria-label="文字色">
-    <button onclick="wrapColor()">色適用</button>
-   </div>
-   <span class="sep"></span>
-   <div class="group">
-    <button onclick="wrap('[left]','[/left]')">左</button>
-    <button onclick="wrap('[center]','[/center]')">中</button>
-    <button onclick="wrap('[right]','[/right]')">右</button>
-   </div>
-   <span class="sep"></span>
-   <div class="group">
-    <button onclick="addLink()">リンク</button>
-    <button onclick="wrap('[hb]','[/hb]')">隠す</button>
-   </div>
-  </div>
- </header>
+<main class="editor">
+ <textarea id="body" maxlength="10000" placeholder="ここに日記を書きます"></textarea>
+ <span id="bcBox" class="bodyCount"><span id="bc">0</span>/10000</span>
+</main>
 
- <main class="editor">
-  <div class="editorHead"><span>本文</span><span id="bcBox" class="counter"><span id="bc">0</span>/10000</span></div>
-  <textarea id="body" maxlength="10000" placeholder="ここに日記を書きます"></textarea>
- </main>
-
- <footer class="bottom">
-  <button onclick="showPreview()">プレビュー</button>
-  <button onclick="copyTitle()">タイトルコピー</button>
-  <button class="accent" onclick="copyBody()">本文コピー</button>
- </footer>
+<footer class="bottom">
+ <button onclick="showPreview()">プレビュー</button>
+ <button onclick="copyTitle()">タイトルコピー</button>
+ <button class="accent" onclick="copyBody()">本文コピー</button>
+</footer>
 </div>
 
 <div id="preview" class="previewOverlay">
  <div class="previewCard">
-  <div class="previewTop"><b>プレビュー　v3.1</b><button onclick="hidePreview()">閉じる</button></div>
-  <div id="pt" class="previewTitle">タイトル</div>
-  <div id="pb" class="previewBody"></div>
+  <div class="previewTop"><b>プレビュー　v3.2</b><button onclick="hidePreview()">閉じる</button></div>
+  <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
  </div>
 </div>
 
 <script>
-const title=document.getElementById('title'), body=document.getElementById('body');
-const tc=document.getElementById('tc'), bc=document.getElementById('bc');
-const tcBox=document.getElementById('tcBox'), bcBox=document.getElementById('bcBox');
-const pt=document.getElementById('pt'), pb=document.getElementById('pb');
-
-function wrap(a,b){
- const s=body.selectionStart,e=body.selectionEnd,v=body.value;
- body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);
- body.focus(); body.setSelectionRange(s+a.length,e+a.length); changed();
-}
-function sizeWrap(n){wrap('[size='+n+']','[/size]')}
-function customSize(){
- const n=parseInt(document.getElementById('customSize').value);
- if(n>=1&&n<=99) sizeWrap(n);
-}
-function wrapColor(){
- wrap('[color='+document.getElementById('color').value.toUpperCase()+']','[/color]');
-}
-function addLink(){
- const u=prompt('リンク先URLを入力してください','https://');
- if(!u)return;
- const s=body.selectionStart,e=body.selectionEnd,v=body.value,t=v.slice(s,e)||'リンク';
- body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);
- body.focus(); changed();
-}
-function esc(s){
- return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-}
-function render(s){
- let x=esc(s);
- return x
- .replace(/\[size=(\d{1,2})\]([\s\S]*?)\[\/size\]/gi,'<span style="font-size:$1px">$2</span>')
- .replace(/\[color=(#[0-9A-Fa-f]{6})\]([\s\S]*?)\[\/color\]/gi,'<span style="color:$1">$2</span>')
- .replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<b>$1</b>')
- .replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<i>$1</i>')
- .replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>')
- .replace(/\[s\]([\s\S]*?)\[\/s\]/gi,'<s>$1</s>')
- .replace(/\[center\]([\s\S]*?)\[\/center\]/gi,'<div style="text-align:center">$1</div>')
- .replace(/\[right\]([\s\S]*?)\[\/right\]/gi,'<div style="text-align:right">$1</div>')
- .replace(/\[left\]([\s\S]*?)\[\/left\]/gi,'<div style="text-align:left">$1</div>')
- .replace(/\[url=([^\]]+)\]([\s\S]*?)\[\/url\]/gi,'<u>$2</u>')
- .replace(/\[hb\]([\s\S]*?)\[\/hb\]/gi,'<span class="hidden">クリックして表示</span>');
-}
-function changed(){
- tc.textContent=title.value.length; bc.textContent=body.value.length;
- tcBox.classList.toggle('warn',title.value.length>=45);
- bcBox.classList.toggle('warn',body.value.length>=9500);
- localStorage.setItem('lodestoneTitle',title.value);
- localStorage.setItem('lodestoneBody',body.value);
-}
-function showPreview(){
- pt.textContent=title.value||'タイトル';
- pb.innerHTML=body.value?render(body.value):'ここにプレビューが表示されます。';
- document.getElementById('preview').classList.add('open');
-}
+const title=document.getElementById('title'),body=document.getElementById('body'),tc=document.getElementById('tc'),bc=document.getElementById('bc'),tcBox=document.getElementById('tcBox'),bcBox=document.getElementById('bcBox'),pt=document.getElementById('pt'),pb=document.getElementById('pb');
+function wrap(a,b){const s=body.selectionStart,e=body.selectionEnd,v=body.value;body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);body.focus();body.setSelectionRange(s+a.length,e+a.length);changed()}
+function sizeWrap(n){wrap('[size='+n+']','[/size]')}function customSize(){const n=parseInt(document.getElementById('customSize').value);if(n>=1&&n<=99)sizeWrap(n)}
+function wrapColor(){wrap('[color='+document.getElementById('color').value.toUpperCase()+']','[/color]')}
+function addLink(){const u=prompt('リンク先URLを入力してください','https://');if(!u)return;const s=body.selectionStart,e=body.selectionEnd,v=body.value,t=v.slice(s,e)||'リンク';body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);body.focus();changed()}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function render(s){let x=esc(s);return x.replace(/\[size=(\d{1,2})\]([\s\S]*?)\[\/size\]/gi,'<span style="font-size:$1px">$2</span>').replace(/\[color=(#[0-9A-Fa-f]{6})\]([\s\S]*?)\[\/color\]/gi,'<span style="color:$1">$2</span>').replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<b>$1</b>').replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<i>$1</i>').replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>').replace(/\[s\]([\s\S]*?)\[\/s\]/gi,'<s>$1</s>').replace(/\[center\]([\s\S]*?)\[\/center\]/gi,'<div style="text-align:center">$1</div>').replace(/\[right\]([\s\S]*?)\[\/right\]/gi,'<div style="text-align:right">$1</div>').replace(/\[left\]([\s\S]*?)\[\/left\]/gi,'<div style="text-align:left">$1</div>').replace(/\[url=([^\]]+)\]([\s\S]*?)\[\/url\]/gi,'<u>$2</u>').replace(/\[hb\]([\s\S]*?)\[\/hb\]/gi,'<span class="hidden">クリックして表示</span>')}
+function changed(){tc.textContent=title.value.length;bc.textContent=body.value.length;tcBox.classList.toggle('warn',title.value.length>=45);bcBox.classList.toggle('warn',body.value.length>=9500);localStorage.setItem('lodestoneTitle',title.value);localStorage.setItem('lodestoneBody',body.value)}
+function showPreview(){pt.textContent=title.value||'タイトル';pb.innerHTML=body.value?render(body.value):'ここにプレビューが表示されます。';document.getElementById('preview').classList.add('open')}
 function hidePreview(){document.getElementById('preview').classList.remove('open')}
-async function cp(s,m){
- try{await navigator.clipboard.writeText(s);alert(m)}
- catch(e){prompt('コピーしてください',s)}
-}
-function copyTitle(){cp(title.value,'タイトルをコピーしました')}
-function copyBody(){cp(body.value,'本文をコピーしました')}
-function mode(d){
- document.body.classList.toggle('dark',d);
- document.getElementById('mode').textContent=d?'☀️':'🌙';
- localStorage.setItem('lodestoneDark',d?'1':'0');
-}
-function toggleMode(){mode(!document.body.classList.contains('dark'))}
-
-title.value=localStorage.getItem('lodestoneTitle')||'';
-body.value=localStorage.getItem('lodestoneBody')||'';
-mode(localStorage.getItem('lodestoneDark')==='1');
-title.oninput=changed; body.oninput=changed; changed();
+async function cp(s,m){try{await navigator.clipboard.writeText(s);alert(m)}catch(e){prompt('コピーしてください',s)}}function copyTitle(){cp(title.value,'タイトルをコピーしました')}function copyBody(){cp(body.value,'本文をコピーしました')}
+function mode(d){document.body.classList.toggle('dark',d);document.getElementById('mode').textContent=d?'☀️':'🌙';localStorage.setItem('lodestoneDark',d?'1':'0')}function toggleMode(){mode(!document.body.classList.contains('dark'))}
+title.value=localStorage.getItem('lodestoneTitle')||'';body.value=localStorage.getItem('lodestoneBody')||'';mode(localStorage.getItem('lodestoneDark')==='1');title.oninput=changed;body.oninput=changed;changed();
 </script>
-</body>
-</html>
+</body></html>
