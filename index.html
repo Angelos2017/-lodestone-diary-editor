@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ロドスト日記エディタ 試作版</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--line:#d7dbe0;--ink:#25282d;--muted:#737a84;--accent:#365f82}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Yu Gothic",Meiryo,sans-serif}
+main{max-width:760px;margin:auto;padding:16px 12px 60px}
+h1{font-size:22px;margin:4px 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px #0000000a}
+label{font-weight:700;display:block;margin-bottom:7px}
+input,textarea{width:100%;font:inherit;font-size:17px;border:1px solid #bcc3ca;border-radius:10px;padding:12px;background:white}
+textarea{min-height:330px;resize:vertical;line-height:1.65}
+.count{text-align:right;color:var(--muted);font-size:12px;margin-top:5px}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+button,select{min-height:42px;border:1px solid #b9c0c7;border-radius:9px;background:#fff;padding:7px 11px;font-size:15px}
+button:active{transform:translateY(1px)}
+.primary{background:var(--accent);color:white;border-color:var(--accent);font-weight:700}
+.colorRow{display:flex;align-items:center;gap:7px}
+input[type=color]{width:48px;height:42px;padding:3px}
+.previewTitle{font-size:22px;font-weight:700;border-bottom:1px solid #ddd;padding-bottom:9px;margin-bottom:13px;word-break:break-word}
+.previewBody{font-family:Arial,"Yu Gothic",Meiryo,sans-serif;font-size:12px;line-height:1.65;white-space:pre-wrap;word-break:break-word;min-height:80px}
+.hidden{display:inline-block;background:#555;color:#fff;border-radius:3px;padding:2px 8px;font-size:12px;cursor:pointer}
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<main>
+<h1>ロドスト日記エディタ <small style="font-size:12px;color:#777">試作版</small></h1>
+
+<section class="card">
+<label for="title">タイトル</label>
+<input id="title" maxlength="50" placeholder="日記のタイトル">
+<div class="count"><span id="tc">0</span> / 50</div>
+</section>
+
+<section class="card">
+<label for="body">本文</label>
+<div class="toolbar">
+<select id="size" aria-label="文字サイズ">
+<option value="12">サイズ12</option><option value="10">サイズ10</option>
+<option value="18">サイズ18</option><option value="32">サイズ32</option>
+</select>
+<div class="colorRow"><input id="color" type="color" value="#ffffff"><button onclick="wrapColor()">色</button></div>
+<button onclick="wrap('[b]','[/b]')"><b>B</b></button>
+<button onclick="wrap('[i]','[/i]')"><i>I</i></button>
+<button onclick="wrap('[u]','[/u]')"><u>U</u></button>
+<button onclick="wrap('[s]','[/s]')"><s>S</s></button>
+<button onclick="wrap('[left]','[/left]')">左</button>
+<button onclick="wrap('[center]','[/center]')">中央</button>
+<button onclick="wrap('[right]','[/right]')">右</button>
+<button onclick="addLink()">リンク</button>
+<button onclick="wrap('[hb]','[/hb]')">隠す</button>
+</div>
+<textarea id="body" maxlength="10000" placeholder="ここに日記を書きます。文字はスマホで読みやすい大きさです。"></textarea>
+<div class="count"><span id="bc">0</span> / 10000</div>
+<div class="actions">
+<button class="primary" onclick="copyTitle()">タイトルをコピー</button>
+<button class="primary" onclick="copyBody()">本文をコピー</button>
+</div>
+</section>
+
+<section class="card">
+<label>プレビュー</label>
+<div id="pt" class="previewTitle">タイトル</div>
+<div id="pb" class="previewBody">ここにプレビューが表示されます。</div>
+</section>
+<p class="note">試作版：色はひとまず自由選択です。後でロドストの固定42色パレットに差し替えできます。下書きはこのブラウザ内に自動保存します。</p>
+</main>
+<script>
+const title=document.getElementById('title'), body=document.getElementById('body');
+const tc=document.getElementById('tc'),bc=document.getElementById('bc'),pt=document.getElementById('pt'),pb=document.getElementById('pb');
+
+function wrap(a,b){
+ const s=body.selectionStart,e=body.selectionEnd,v=body.value,sel=v.slice(s,e);
+ body.value=v.slice(0,s)+a+sel+b+v.slice(e);
+ body.focus(); body.setSelectionRange(s+a.length,e+a.length); changed();
+}
+document.getElementById('size').onchange=e=>wrap('[size='+e.target.value+']','[/size]');
+function wrapColor(){wrap('[color='+document.getElementById('color').value.toUpperCase()+']','[/color]')}
+function addLink(){
+ const u=prompt('リンク先URLを入力してください','https://');
+ if(!u)return;
+ const s=body.selectionStart,e=body.selectionEnd,v=body.value,sel=v.slice(s,e)||'リンク';
+ body.value=v.slice(0,s)+'[url='+u+']'+sel+'[/url]'+v.slice(e); changed();
+}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function render(src){
+ let x=esc(src);
+ x=x.replace(/\[size=(10|12|18|32)\]([\s\S]*?)\[\/size\]/gi,'<span style="font-size:$1px">$2</span>')
+ .replace(/\[color=(#[0-9A-Fa-f]{6})\]([\s\S]*?)\[\/color\]/gi,'<span style="color:$1">$2</span>')
+ .replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<b>$1</b>')
+ .replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<i>$1</i>')
+ .replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>')
+ .replace(/\[s\]([\s\S]*?)\[\/s\]/gi,'<s>$1</s>')
+ .replace(/\[center\]([\s\S]*?)\[\/center\]/gi,'<div style="text-align:center">$1</div>')
+ .replace(/\[right\]([\s\S]*?)\[\/right\]/gi,'<div style="text-align:right">$1</div>')
+ .replace(/\[left\]([\s\S]*?)\[\/left\]/gi,'<div style="text-align:left">$1</div>')
+ .replace(/\[url=([^\]]+)\]([\s\S]*?)\[\/url\]/gi,'<u>$2</u>')
+ .replace(/\[hb\]([\s\S]*?)\[\/hb\]/gi,'<span class="hidden" onclick="this.textContent=this.dataset.t" data-t="$1">クリックして表示</span>');
+ return x;
+}
+function changed(){
+ tc.textContent=title.value.length;bc.textContent=body.value.length;
+ pt.textContent=title.value||'タイトル';
+ pb.innerHTML=body.value?render(body.value):'ここにプレビューが表示されます。';
+ localStorage.setItem('lodestoneTitle',title.value);localStorage.setItem('lodestoneBody',body.value);
+}
+async function cp(s,msg){try{await navigator.clipboard.writeText(s);alert(msg)}catch(e){prompt('コピーしてください',s)}}
+function copyTitle(){cp(title.value,'タイトルをコピーしました')}
+function copyBody(){cp(body.value,'本文をコピーしました')}
+title.value=localStorage.getItem('lodestoneTitle')||'';body.value=localStorage.getItem('lodestoneBody')||'';
+title.addEventListener('input',changed);body.addEventListener('input',changed);changed();
+</script>
+</body></html>
