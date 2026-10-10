@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f5f7">
-<title>しお✦あんエディタ v3.8</title>
+<title>しお✦あんエディタ v3.9</title>
 <style>
 :root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
 body.dark{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
@@ -81,7 +81,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 <div class="app">
 <header class="top">
  <div class="brandrow">
-  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.8</small></div>
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.9</small></div>
   <button id="mode" class="mode" onclick="toggleMode()" aria-label="ダークモード">🌙</button>
  </div>
  <div class="titleRow">
@@ -136,7 +136,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 
 <div id="preview" class="previewOverlay">
  <div class="previewCard">
-  <div class="previewTop"><b>プレビュー　v3.8</b><button onclick="hidePreview()">閉じる</button></div>
+  <div class="previewTop"><b>プレビュー　v3.9</b><button onclick="hidePreview()">閉じる</button></div>
   <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
  </div>
 </div>
@@ -183,49 +183,86 @@ function confirmFreeColor(){
  document.getElementById('freeColorPanel').classList.remove('open');
 }
 function applyCurrentColor(){
- let s=body.selectionStart,e=body.selectionEnd;
- if(s===e){
-   alert('色を変える文字を選択してください');
-   body.focus();
-   return;
- }
-
- const v=body.value;
- const hex=document.getElementById('currentHex').textContent.toUpperCase();
- const open='[color='+hex+']',close='[/color]';
-
- // If the selected text is already exactly one color block, replace its color.
- const selected=v.slice(s,e);
- const whole=selected.match(/^\[color=#[0-9A-Fa-f]{6}\]([\s\S]*?)\[\/color\]$/i);
- if(whole){
-   const rep=open+whole[1]+close;
-   body.value=v.slice(0,s)+rep+v.slice(e);
-   changed();body.focus();
-   setTimeout(()=>body.setSelectionRange(s+open.length,s+open.length+whole[1].length),0);
-   return;
- }
-
- // If the selection is the inner text of an existing color block, replace that wrapper.
- const before=v.slice(0,s),after=v.slice(e);
- const om=before.match(/\[color=#[0-9A-Fa-f]{6}\]$/i);
- const cm=after.match(/^\[\/color\]/i);
- if(om&&cm){
-   const os=s-om[0].length,ce=e+cm[0].length;
-   const inner=v.slice(s,e),rep=open+inner+close;
-   body.value=v.slice(0,os)+rep+v.slice(ce);
-   changed();body.focus();
-   setTimeout(()=>body.setSelectionRange(os+open.length,os+open.length+inner.length),0);
-   return;
- }
-
- body.value=v.slice(0,s)+open+v.slice(s,e)+close+v.slice(e);
- changed();body.focus();
- setTimeout(()=>body.setSelectionRange(s+open.length,e+open.length),0);
+  let s=body.selectionStart,e=body.selectionEnd;
+  if(document.activeElement!==body){s=savedStart;e=savedEnd}
+  const v=body.value;
+  const hex=document.getElementById('currentHex').textContent.toUpperCase();
+  const open='[color='+hex+']',close='[/color]';
+  // With no selection, insert an empty pair and place the caret inside.
+  if(s===e){
+    body.value=v.slice(0,s)+open+close+v.slice(e);
+    changed();body.focus();body.setSelectionRange(s+open.length,s+open.length);
+    savedStart=s+open.length;savedEnd=savedStart;
+    return;
+  }
+  const selected=v.slice(s,e);
+  const whole=selected.match(/^\[color=#[0-9A-Fa-f]{6}\]([\s\S]*?)\[\/color\]$/i);
+  if(whole){
+    const rep=open+whole[1]+close;
+    body.value=v.slice(0,s)+rep+v.slice(e);
+    changed();body.focus();body.setSelectionRange(s+open.length,s+open.length+whole[1].length);
+    savedStart=body.selectionStart;savedEnd=body.selectionEnd;
+    return;
+  }
+  const before=v.slice(0,s),after=v.slice(e);
+  const om=before.match(/\[color=#[0-9A-Fa-f]{6}\]$/i);
+  const cm=after.match(/^\[\/color\]/i);
+  if(om&&cm){
+    const os=s-om[0].length,ce=e+cm[0].length;
+    const inner=v.slice(s,e),rep=open+inner+close;
+    body.value=v.slice(0,os)+rep+v.slice(ce);
+    changed();body.focus();body.setSelectionRange(os+open.length,os+open.length+inner.length);
+    savedStart=body.selectionStart;savedEnd=body.selectionEnd;
+    return;
+  }
+  body.value=v.slice(0,s)+open+selected+close+v.slice(e);
+  changed();body.focus();body.setSelectionRange(s+open.length,e+open.length);
+  savedStart=body.selectionStart;savedEnd=body.selectionEnd;
 }
 
 function addLink(){let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const u=prompt('リンク先URLを入力してください','https://');if(!u)return;const v=body.value,t=v.slice(s,e)||'リンク';body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);body.focus();savedStart=s;savedEnd=s+('[url='+u+']'+t+'[/url]').length;body.setSelectionRange(savedStart,savedEnd);changed()}
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function render(s){let x=esc(s);return x.replace(/\[size=(1\d|2\d|3[0-2])\]([\s\S]*?)\[\/size\]/gi,'<span style="font-size:$1px">$2</span>').replace(/\[color=(#[0-9A-Fa-f]{6})\]([\s\S]*?)\[\/color\]/gi,'<span style="color:$1">$2</span>').replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<b>$1</b>').replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<i>$1</i>').replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>').replace(/\[s\]([\s\S]*?)\[\/s\]/gi,'<s>$1</s>').replace(/\[center\]([\s\S]*?)\[\/center\]/gi,'<div style="text-align:center">$1</div>').replace(/\[right\]([\s\S]*?)\[\/right\]/gi,'<div style="text-align:right">$1</div>').replace(/\[left\]([\s\S]*?)\[\/left\]/gi,'<div style="text-align:left">$1</div>').replace(/\[url=([^\]]+)\]([\s\S]*?)\[\/url\]/gi,'<u>$2</u>').replace(/\[hb\]([\s\S]*?)\[\/hb\]/gi,'<span class="hidden">クリックして表示</span>')}
+// Parse Lodestone-style nested tags with a stack instead of flat regex replacements.
+function render(s){
+  const root={name:'root',children:[]};
+  const stack=[root];
+  const tagRe=/\[(\/?)(b|i|u|s|left|center|right|hb|size|color|url)(?:=([^\]\r\n]*))?\]/gi;
+  let pos=0,m;
+  const addText=t=>{if(t)stack[stack.length-1].children.push({text:t})};
+  while((m=tagRe.exec(s))!==null){
+    addText(s.slice(pos,m.index));pos=tagRe.lastIndex;
+    const closing=!!m[1],name=m[2].toLowerCase(),arg=m[3];
+    const validArg=(name==='size'?(!closing&&arg!==undefined&&/^(1\d|2\d|3[0-2])$/.test(arg)):
+      name==='color'?(!closing&&arg!==undefined&&/^#[0-9a-f]{6}$/i.test(arg)):
+      name==='url'?(!closing&&arg!==undefined&&arg.length>0):arg===undefined);
+    if(closing){
+      if(arg===undefined&&stack.length>1&&stack[stack.length-1].name===name){stack.pop()}
+      else addText(m[0]);
+    }else if(validArg){
+      const node={name,arg,children:[],opening:m[0]};
+      stack[stack.length-1].children.push(node);stack.push(node);
+    }else addText(m[0]);
+  }
+  addText(s.slice(pos));
+  // Show unmatched opening tags literally rather than silently swallowing them.
+  const unclosed=new Set(stack.slice(1));
+  function html(nodes){return nodes.map(n=>{
+    if(Object.prototype.hasOwnProperty.call(n,'text'))return esc(n.text);
+    const inside=html(n.children);
+    if(unclosed.has(n))return esc(n.opening)+inside;
+    switch(n.name){
+      case 'b':case 'i':case 'u':case 's':return '<'+n.name+'>'+inside+'</'+n.name+'>';
+      case 'size':return '<span style="font-size:'+n.arg+'px">'+inside+'</span>';
+      case 'color':return '<span style="color:'+n.arg+'">'+inside+'</span>';
+      case 'left':case 'center':case 'right':return '<span style="display:block;text-align:'+n.name+'">'+inside+'</span>';
+      case 'url':return '<u>'+inside+'</u>';
+      case 'hb':return '<span class="hidden">クリックして表示</span>';
+      default:return inside;
+    }
+  }).join('')}
+  return html(root.children);
+}
+
 function changed(){tc.textContent=title.value.length;bc.textContent=body.value.length;tcBox.classList.toggle('warn',title.value.length>=45);bcBox.classList.toggle('warn',body.value.length>=9500);localStorage.setItem('lodestoneTitle',title.value);localStorage.setItem('lodestoneBody',body.value)}
 function showPreview(){pt.textContent=title.value||'タイトル';pb.innerHTML=body.value?render(body.value):'ここにプレビューが表示されます。';document.getElementById('preview').classList.add('open')}
 function hidePreview(){document.getElementById('preview').classList.remove('open')}
