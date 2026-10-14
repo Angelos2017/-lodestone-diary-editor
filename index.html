@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f5f7">
-<title>しお✦あんエディタ v3.9</title>
+<title>しお✦あんエディタ v3.9.1 TEST</title>
 <style>
 :root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
 body.dark{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
@@ -81,7 +81,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 <div class="app">
 <header class="top">
  <div class="brandrow">
-  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.9</small></div>
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.9.1 TEST</small></div>
   <button id="mode" class="mode" onclick="toggleMode()" aria-label="ダークモード">🌙</button>
  </div>
  <div class="titleRow">
@@ -136,7 +136,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 
 <div id="preview" class="previewOverlay">
  <div class="previewCard">
-  <div class="previewTop"><b>プレビュー　v3.9</b><button onclick="hidePreview()">閉じる</button></div>
+  <div class="previewTop"><b>プレビュー　v3.9.1 TEST</b><button onclick="hidePreview()">閉じる</button></div>
   <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
  </div>
 </div>
@@ -149,7 +149,18 @@ let savedStart=0,savedEnd=0;
 function rememberSelection(){savedStart=body.selectionStart;savedEnd=body.selectionEnd}
 ['select','keyup','mouseup','touchend','input'].forEach(ev=>body.addEventListener(ev,rememberSelection));
 
-function wrap(a,b){let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const v=body.value;body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);body.focus();body.setSelectionRange(s+a.length,e+a.length);savedStart=s+a.length;savedEnd=e+a.length;changed()}
+// Preserve the editor's scroll position when toolbar actions restore the caret.
+function captureEditorView(){return {top:body.scrollTop,left:body.scrollLeft,pageX:window.scrollX,pageY:window.scrollY}}
+function restoreEditorView(view){
+  body.scrollTop=view.top;body.scrollLeft=view.left;
+  window.scrollTo(view.pageX,view.pageY);
+  requestAnimationFrame(()=>{
+    body.scrollTop=view.top;body.scrollLeft=view.left;
+    window.scrollTo(view.pageX,view.pageY);
+  });
+}
+function focusEditorWithoutJump(){try{body.focus({preventScroll:true})}catch(_){body.focus()}}
+function wrap(a,b){const view=captureEditorView();let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const v=body.value;body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);focusEditorWithoutJump();body.setSelectionRange(s+a.length,e+a.length);savedStart=s+a.length;savedEnd=e+a.length;changed();restoreEditorView(view)}
 function sizeWrap(n){wrap('[size='+n+']','[/size]')}function openColorPalette(){
  document.getElementById('colorTray').classList.toggle('open');
 }
@@ -183,6 +194,7 @@ function confirmFreeColor(){
  document.getElementById('freeColorPanel').classList.remove('open');
 }
 function applyCurrentColor(){
+  const view=captureEditorView();
   let s=body.selectionStart,e=body.selectionEnd;
   if(document.activeElement!==body){s=savedStart;e=savedEnd}
   const v=body.value;
@@ -191,18 +203,18 @@ function applyCurrentColor(){
   // With no selection, insert an empty pair and place the caret inside.
   if(s===e){
     body.value=v.slice(0,s)+open+close+v.slice(e);
-    changed();body.focus();body.setSelectionRange(s+open.length,s+open.length);
+    changed();focusEditorWithoutJump();body.setSelectionRange(s+open.length,s+open.length);
     savedStart=s+open.length;savedEnd=savedStart;
-    return;
+    restoreEditorView(view);return;
   }
   const selected=v.slice(s,e);
   const whole=selected.match(/^\[color=#[0-9A-Fa-f]{6}\]([\s\S]*?)\[\/color\]$/i);
   if(whole){
     const rep=open+whole[1]+close;
     body.value=v.slice(0,s)+rep+v.slice(e);
-    changed();body.focus();body.setSelectionRange(s+open.length,s+open.length+whole[1].length);
+    changed();focusEditorWithoutJump();body.setSelectionRange(s+open.length,s+open.length+whole[1].length);
     savedStart=body.selectionStart;savedEnd=body.selectionEnd;
-    return;
+    restoreEditorView(view);return;
   }
   const before=v.slice(0,s),after=v.slice(e);
   const om=before.match(/\[color=#[0-9A-Fa-f]{6}\]$/i);
@@ -211,16 +223,17 @@ function applyCurrentColor(){
     const os=s-om[0].length,ce=e+cm[0].length;
     const inner=v.slice(s,e),rep=open+inner+close;
     body.value=v.slice(0,os)+rep+v.slice(ce);
-    changed();body.focus();body.setSelectionRange(os+open.length,os+open.length+inner.length);
+    changed();focusEditorWithoutJump();body.setSelectionRange(os+open.length,os+open.length+inner.length);
     savedStart=body.selectionStart;savedEnd=body.selectionEnd;
-    return;
+    restoreEditorView(view);return;
   }
   body.value=v.slice(0,s)+open+selected+close+v.slice(e);
-  changed();body.focus();body.setSelectionRange(s+open.length,e+open.length);
+  changed();focusEditorWithoutJump();body.setSelectionRange(s+open.length,e+open.length);
   savedStart=body.selectionStart;savedEnd=body.selectionEnd;
+  restoreEditorView(view);
 }
 
-function addLink(){let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const u=prompt('リンク先URLを入力してください','https://');if(!u)return;const v=body.value,t=v.slice(s,e)||'リンク';body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);body.focus();savedStart=s;savedEnd=s+('[url='+u+']'+t+'[/url]').length;body.setSelectionRange(savedStart,savedEnd);changed()}
+function addLink(){const view=captureEditorView();let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const u=prompt('リンク先URLを入力してください','https://');if(!u)return;const v=body.value,t=v.slice(s,e)||'リンク';body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);focusEditorWithoutJump();savedStart=s;savedEnd=s+('[url='+u+']'+t+'[/url]').length;body.setSelectionRange(savedStart,savedEnd);changed();restoreEditorView(view)}
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 // Parse Lodestone-style nested tags with a stack instead of flat regex replacements.
 function render(s){
