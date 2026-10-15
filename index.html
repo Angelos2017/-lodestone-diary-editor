@@ -6,13 +6,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f5f7">
-<title>しお✦あんエディタ v3.10 TEST</title>
+<title>しお✦あんエディタ v3.10.1 TEST</title>
 <style>
 :root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
 body[data-theme="dark"]{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
-body[data-theme="sakura"]{--bg:#fff0f4;--paper:#fffafd;--ink:#624653;--muted:#987987;--line:#efd0dc;--btn:#fff8fb;--accent:#bd6688;--warn:#c43b3b}
-body[data-theme="matcha"]{--bg:#ecf2e7;--paper:#fafcf7;--ink:#394f3d;--muted:#748576;--line:#cbd9c7;--btn:#f7fbf3;--accent:#5e855b;--warn:#b43d3d}
-body[data-theme="sepia"]{--bg:#f1e7d5;--paper:#fff7e8;--ink:#654c36;--muted:#987e63;--line:#d9c5a9;--btn:#fff2df;--accent:#976b44;--warn:#a73d36}
+body[data-theme="sakura"]{--bg:#f7e9ef;--paper:#fff0f5;--ink:#624653;--muted:#8c6475;--line:#e3bcca;--btn:#f4dfe8;--accent:#ae597c;--warn:#c43b3b}
+body[data-theme="matcha"]{--bg:#e8efdf;--paper:#f2f5e9;--ink:#394f3d;--muted:#687d66;--line:#b8cbaa;--btn:#dce8d3;--accent:#5e855b;--warn:#b43d3d}
+body[data-theme="sepia"]{--bg:#eee1ce;--paper:#f8eddb;--ink:#654c36;--muted:#90765e;--line:#d3bca0;--btn:#ead8bf;--accent:#976b44;--warn:#a73d36}
 body[data-theme="midnight"]{--bg:#121b30;--paper:#23314c;--ink:#edf1fa;--muted:#b2bfd8;--line:#415375;--btn:#2d3d5d;--accent:#788dd2;--warn:#ff8b8b}
 *{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",Meiryo,sans-serif}
@@ -24,7 +24,7 @@ body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSys
 input,textarea,button{font:inherit;color:var(--ink);border:1px solid var(--line)}
 button{flex:0 0 auto;height:28px;min-height:28px;background:var(--btn);border-radius:6px;padding:2px 6px;font-size:12px}
 button:active{transform:translateY(1px)}
-.themeSelect{height:25px;max-width:92px;border:1px solid var(--line);border-radius:6px;background:var(--btn);color:var(--ink);font-size:11px;padding:1px 2px}.mode{height:25px;min-height:25px;min-width:31px;padding:1px 5px}
+.updateBtn{height:25px;min-height:25px;padding:1px 5px;font-size:10px;white-space:nowrap}.newBadge{font-size:8px;color:var(--accent);font-weight:800;margin-left:2px}.newBadge[hidden]{display:none}.themeSelect{height:25px;max-width:92px;border:1px solid var(--line);border-radius:6px;background:var(--btn);color:var(--ink);font-size:11px;padding:1px 2px}.mode{height:25px;min-height:25px;min-width:31px;padding:1px 5px}
 .titleRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px;align-items:center;margin-top:2px}
 #title{width:100%;height:31px;background:var(--paper);border-radius:7px;padding:4px 8px;font-size:15px;outline:none}
 #title:focus,textarea:focus{border-color:var(--accent)}
@@ -78,17 +78,24 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 .freePreview{width:38px;height:29px;border:1px solid var(--line);border-radius:6px;background:#ff0000}
 .freeColorBottom button{margin-left:auto}
 
-@media(max-width:390px){.brand{font-size:13px}.credit{white-space:nowrap;font-size:9px;color:var(--muted);flex:0 0 auto}.brand small{font-size:8px}}
+@media(max-width:390px){.updateBtn{font-size:10px;padding:1px 4px}.themeSelect{max-width:77px}.brand small{display:none}.credit{font-size:8px}.brand{font-size:13px}.credit{white-space:nowrap;font-size:9px;color:var(--muted);flex:0 0 auto}.brand small{font-size:8px}}
 @media(max-height:600px){.top{padding-top:2px;padding-bottom:3px}.brandrow{height:22px}.mode{height:22px;min-height:22px}#title{height:29px}.toolbar{padding-top:2px}.editor{padding-top:3px}.bottom{padding-top:3px;padding-bottom:calc(3px + env(safe-area-inset-bottom))}}
 
+
+/* Release notes overlay follows the current color theme. */
+.releaseOverlay{position:fixed;inset:0;z-index:35;background:rgba(0,0,0,.38);display:none;align-items:center;justify-content:center;padding:14px}
+.releaseOverlay.open{display:flex}
+.releasePanel{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:15px;width:min(100%,440px);max-height:80dvh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.releaseHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.releaseHead strong{font-size:16px}.releasePanel h3{font-size:13px;margin:12px 0 5px}.releasePanel p,.releasePanel li{font-size:12px;line-height:1.65}.releasePanel ul{padding-left:19px;margin:5px 0}.releasePanel .releaseDate{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="app">
 <header class="top">
  <div class="brandrow">
-  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.10 TEST</small></div>
-  <span class="credit">♡ Created by 塩餡</span><select id="themeSelect" class="themeSelect" aria-label="配色テーマ" onchange="setTheme(this.value)"><option value="light">ライト</option><option value="dark">ダーク</option><option value="sakura">桜</option><option value="matcha">抹茶</option><option value="sepia">セピア</option><option value="midnight">ミッドナイト</option></select>
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.10.1 TEST</small></div>
+  <span class="credit">♡ Created by 塩餡</span><button class="updateBtn" type="button" onclick="showReleaseNotes()" aria-label="更新情報">更新<span id="updateNew" class="newBadge" hidden>NEW</span></button><select id="themeSelect" class="themeSelect" aria-label="配色テーマ" onchange="setTheme(this.value)"><option value="light">ライト</option><option value="dark">ダーク</option><option value="sakura">桜</option><option value="matcha">抹茶</option><option value="sepia">セピア</option><option value="midnight">ミッドナイト</option></select>
  </div>
  <div class="titleRow">
   <input id="title" maxlength="50" placeholder="タイトル">
@@ -140,9 +147,22 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 </div>
 
 
+<div id="releaseOverlay" class="releaseOverlay" role="dialog" aria-modal="true" aria-label="更新情報" onclick="if(event.target===this)hideReleaseNotes()">
+ <section class="releasePanel">
+  <div class="releaseHead"><strong>📋 更新情報</strong><button type="button" onclick="hideReleaseNotes()">閉じる</button></div>
+  <h3>v3.10.1 — 配色と更新案内</h3>
+  <ul><li>6種類の配色テーマを調整。桜・抹茶・セピアも背景や入力欄まで優しく色づきます。</li><li>更新情報ボタンを追加。新しい更新があると「NEW」が表示されます。</li></ul>
+  <h3>v3.10 — 新機能</h3>
+  <ul><li><b>画像メモ：</b>本文に「【画像①：集合写真】」のような目印を入れられます。ロドストに貼り付けた後、実際の画像タグに置き換えてください。目印を残したまま公開しないようご注意ください。</li><li><b>動画：</b>YouTube・TwitchのURLから動画タグを挿入します。エディタのプレビューは再生せず、挿入位置を表示します。</li><li>配色テーマを6種類に拡張。選択したテーマは保存されます。</li><li>リンク入力時のURL重複を改善。タイトルに制作者表記を追加。</li></ul>
+  <h3>v3.9.1 — 不具合修正</h3>
+  <p>長文の先頭付近にタグを挿入した際のスクロールずれを改善。</p>
+  <p class="releaseDate">※ 画像・動画の表示はロドスト投稿前に確認してください。</p>
+ </section>
+</div>
+
 <div id="preview" class="previewOverlay">
  <div class="previewCard">
-  <div class="previewTop"><b>プレビュー　v3.10 TEST</b><button onclick="hidePreview()">閉じる</button></div>
+  <div class="previewTop"><b>プレビュー　v3.10.1 TEST</b><button onclick="hidePreview()">閉じる</button></div>
   <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
  </div>
 </div>
@@ -338,8 +358,13 @@ function clearAll(){
  localStorage.removeItem('lodestoneBody');
  changed();body.focus();
 }
+const releaseVersion='3.10.1';
+function updateReleaseBadge(){const badge=document.getElementById('updateNew');badge.hidden=localStorage.getItem('shioanReleaseSeen')===releaseVersion}
+function showReleaseNotes(){document.getElementById('releaseOverlay').classList.add('open');localStorage.setItem('shioanReleaseSeen',releaseVersion);updateReleaseBadge()}
+function hideReleaseNotes(){document.getElementById('releaseOverlay').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideReleaseNotes()});
 const validThemes=['light','dark','sakura','matcha','sepia','midnight'];
 function setTheme(t){if(!validThemes.includes(t))t='light';document.body.dataset.theme=t;document.getElementById('themeSelect').value=t;localStorage.setItem('shioanTheme',t)}
-title.value=localStorage.getItem('lodestoneTitle')||'';body.value=localStorage.getItem('lodestoneBody')||'';setTheme(localStorage.getItem('shioanTheme')||(localStorage.getItem('lodestoneDark')==='1'?'dark':'light'));title.oninput=changed;body.oninput=changed;changed();rememberSelection();
+title.value=localStorage.getItem('lodestoneTitle')||'';body.value=localStorage.getItem('lodestoneBody')||'';setTheme(localStorage.getItem('shioanTheme')||(localStorage.getItem('lodestoneDark')==='1'?'dark':'light'));title.oninput=changed;body.oninput=changed;changed();rememberSelection();updateReleaseBadge();
 </script>
 </body></html>
