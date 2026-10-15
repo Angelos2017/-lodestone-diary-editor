@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f5f7">
-<title>しお✦あんエディタ v3.10.1 TEST</title>
+<title>しお✦あんエディタ v3.10.2 TEST</title>
 <style>
 :root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
 body[data-theme="dark"]{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
@@ -47,7 +47,12 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 .previewTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.previewTitle{font-size:21px;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:11px}
 .previewBody{font-family:Arial,"Yu Gothic",Meiryo,sans-serif;font-size:12px;line-height:1.65;white-space:pre-wrap;word-break:break-word;min-height:120px}
 .mediaPlaceholder{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;max-width:100%;margin:7px 0;padding:12px 10px;min-height:76px;border:1px dashed var(--line);border-radius:8px;background:var(--bg);color:var(--muted);text-align:center;white-space:normal}
-.mediaPlaceholder strong{font-size:13px;color:var(--ink)}.mediaPlaceholder small{font-size:10px;overflow-wrap:anywhere}.mediaPlaceholder.video{min-height:100px}
+.mediaPlaceholder strong{font-size:13px;color:var(--ink)}.mediaPlaceholder small{font-size:10px;overflow-wrap:anywhere}/* Adjacent image placeholders mirror Lodestone's compact image rows. */
+.imageRow{display:flex;align-items:stretch;gap:4px;width:100%;max-width:100%;margin:7px 0;white-space:normal}
+.imageRow .mediaPlaceholder.image{flex:1 1 0;min-width:0;width:0;max-width:none;margin:0;padding:7px 3px;min-height:70px;gap:3px}
+.imageRow .mediaPlaceholder.image strong{font-size:clamp(8px,1.5vw,11px);overflow-wrap:anywhere}
+.imageRow .mediaPlaceholder.image small{font-size:clamp(8px,1.3vw,10px);overflow-wrap:anywhere}
+.mediaPlaceholder.video{min-height:100px}
 .hidden{display:inline-block;background:#555;color:#fff;padding:2px 8px;border-radius:3px;font-size:12px}
 
 .colorTray{display:none;margin-top:4px;padding:7px;background:var(--paper);border:1px solid var(--line);border-radius:8px}
@@ -94,7 +99,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 <div class="app">
 <header class="top">
  <div class="brandrow">
-  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.10.1 TEST</small></div>
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.10.2 TEST</small></div>
   <span class="credit">♡ Created by 塩餡</span><button class="updateBtn" type="button" onclick="showReleaseNotes()" aria-label="更新情報">更新<span id="updateNew" class="newBadge" hidden>NEW</span></button><select id="themeSelect" class="themeSelect" aria-label="配色テーマ" onchange="setTheme(this.value)"><option value="light">ライト</option><option value="dark">ダーク</option><option value="sakura">桜</option><option value="matcha">抹茶</option><option value="sepia">セピア</option><option value="midnight">ミッドナイト</option></select>
  </div>
  <div class="titleRow">
@@ -162,7 +167,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 
 <div id="preview" class="previewOverlay">
  <div class="previewCard">
-  <div class="previewTop"><b>プレビュー　v3.10.1 TEST</b><button onclick="hidePreview()">閉じる</button></div>
+  <div class="previewTop"><b>プレビュー　v3.10.2 TEST</b><button onclick="hidePreview()">閉じる</button></div>
   <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
  </div>
 </div>
@@ -298,12 +303,14 @@ function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;
 function render(s){
   // Escape media tokens first; placeholders are only rendered in the preview.
   const media=[];
+  const mediaKinds=[];
   s=s.replace(/\[video=(https?:\/\/[^\]\r\n]+)\]|\[img=(\d+)\]|【画像(\d+)：([^】\r\n]*)】/gi,(full,url,imgId,num,note)=>{
     let kind,label,detail;
     if(url){kind='video';label='▶ 動画の埋め込み位置';detail=url}
     else if(imgId){kind='image';label='▧ 画像の表示位置';detail='画像ID：'+imgId}
     else{kind='image';label='▧ 画像'+num+' の挿入予定';detail=note}
     const token='\uE000MEDIA'+media.length+'\uE001';
+    mediaKinds.push(kind);
     media.push('<span class="mediaPlaceholder '+kind+'"><strong>'+esc(label)+'</strong><small>'+esc(detail)+'</small></span>');
     return token;
   });
@@ -343,7 +350,23 @@ function render(s){
       default:return inside;
     }
   }).join('')}
-  return html(root.children).replace(/\uE000MEDIA(\d+)\uE001/g,(_,n)=>media[Number(n)]||'');
+  // Group only consecutive image tokens on the same line; a newline ends a row.
+  // Video tokens and other content are never included in an image row.
+  const tokenRe=/\uE000MEDIA(\d+)\uE001/g;
+  const rawHtml=html(root.children);
+  const rowRe=/(?:\uE000MEDIA\d+\uE001)(?:[ \t]*(?:\uE000MEDIA\d+\uE001))*/g;
+  const grouped=rawHtml.replace(rowRe,run=>{
+    const ids=[...run.matchAll(tokenRe)].map(m=>Number(m[1]));
+    if(ids.length<2||ids.some(id=>mediaKinds[id]!=='image'))return run;
+    const chunks=[];
+    for(let i=0;i<ids.length;i+=5){
+      const items=ids.slice(i,i+5);
+      if(items.length===1)chunks.push(media[items[0]]);
+      else chunks.push('<span class="imageRow">'+items.map(id=>media[id]).join('')+'</span>');
+    }
+    return chunks.join('');
+  });
+  return grouped.replace(/\uE000MEDIA(\d+)\uE001/g,(_,n)=>media[Number(n)]||'');
 }
 
 function changed(){tc.textContent=title.value.length;bc.textContent=body.value.length;tcBox.classList.toggle('warn',title.value.length>=45);bcBox.classList.toggle('warn',body.value.length>=9500);localStorage.setItem('lodestoneTitle',title.value);localStorage.setItem('lodestoneBody',body.value)}
