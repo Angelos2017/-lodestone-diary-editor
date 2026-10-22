@@ -1,151 +1,294 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><link rel="icon" type="image/x-icon" href="favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="favicon-180.png"><meta name="viewport" content="width=device-width,initial-scale=1"><title>しお✦あんマクロエディタ v1.2.1 プレビュー版</title><style>:root{font-family:system-ui,'Hiragino Kaku Gothic ProN',sans-serif;color:#28334b;background:#f5f6fc}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(110deg,#7769c7,#d187b1);color:white;padding:25px max(20px,calc((100vw - 960px)/2))}h1{margin:0;font-size:1.65rem}header p{margin:8px 0 0}main{max-width:960px;margin:22px auto;padding:0 16px}nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;background:#7567bd;color:white;font-weight:650}button:hover{filter:brightness(.95)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #e6a8dc;outline-offset:2px}nav button{background:var(--lav-soft);color:var(--ink)}nav button.active{background:#7567bd;color:white}.panel{background:white;border-radius:16px;padding:20px;box-shadow:0 5px 22px #35305a12;margin-bottom:18px}.hidden{display:none}textarea,input,select{width:100%;border:1px solid #c9c9d9;border-radius:9px;padding:11px;font:inherit;background:white}textarea{min-height:145px;resize:vertical}label{display:block;font-weight:700;margin:12px 0 7px}.muted{color:#68718a;font-size:.9rem}.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.row>input{flex:1;min-width:170px}.line{display:flex;gap:10px;align-items:center;border-bottom:1px solid #eaeaf1;padding:10px 0}.line code{flex:1;overflow-wrap:anywhere;white-space:pre-wrap;font-size:.93rem}.num{min-width:28px;color:#7b7894}.small{padding:7px 11px}.done{background:#dbeee5;color:#22634b}.warning{color:#a43b3b;font-weight:700}.pill{display:inline-block;background:#f1eafa;border-radius:30px;padding:4px 9px;font-size:.78rem}.entry{padding:13px 0;border-bottom:1px solid #eee}.entry p{margin:6px 0}.entry code{display:block;background:#f5f4fb;padding:10px;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere}.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:650px){.split{grid-template-columns:1fr}.panel{padding:15px}}footer{text-align:center;padding:18px;color:#68718a;font-size:.85rem}</style><style>
-:root{--bg:#f3faf5;--panel:#fff;--ink:#213b2e;--muted:#557362;--border:#d7e8dc;--soft:#e7f6e9;--accent:#328b5d;--accentText:#fff;--code:#edf7ee;color-scheme:light}
-body{background:var(--bg);color:var(--ink)}header{background:linear-gradient(115deg,#7cd49b,#c3f1a4);color:#173f2d}header .header-inner{max-width:960px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}header h1{color:#173f2d}header p{color:#26563a}header button{background:#fff;color:#246a43;border:1px solid #9fd8ac;white-space:nowrap}
-.panel{background:var(--panel);box-shadow:0 5px 22px #225b3414}button{background:var(--accent);color:var(--accentText)}nav button{background:var(--soft);color:var(--ink)}nav button.active{background:var(--accent);color:#fff}.muted,footer,.num{color:var(--muted)}.pill{background:var(--soft)}.line,.entry{border-color:var(--border)}.entry code{background:var(--code);color:var(--ink)}textarea,input,select{background:var(--panel);color:var(--ink);border-color:var(--border)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline-color:#79cb98}.done{background:#d7eee0;color:#21623f}.secondary{background:var(--soft)!important;color:var(--ink)!important}#category{max-width:240px}.entry .row{margin-top:9px}.entry .pill{margin-left:8px}.entry details{margin-top:7px}.entry summary{cursor:pointer;color:var(--accent)}
-html[data-theme="dark"]{--bg:#131e19;--panel:#203128;--ink:#e7f5e9;--muted:#afcdb9;--border:#3b5746;--soft:#2b4836;--accent:#74c997;--accentText:#10281b;--code:#17261c;color-scheme:dark}
-html[data-theme="dark"] header{background:linear-gradient(115deg,#23543a,#3d6b43);color:#e7f5e9}html[data-theme="dark"] header h1,html[data-theme="dark"] header p{color:#e7f5e9}html[data-theme="dark"] header button{background:#1b3224;color:#d5f8de;border-color:#598e68}html[data-theme="dark"] nav button.active{color:#10281b}html[data-theme="dark"] .done{background:#355944;color:#d5f7df}
-@media(max-width:650px){header .header-inner{align-items:flex-start;flex-direction:column}header{padding:20px}#category{max-width:100%}.row>input{min-width:100%}}
- .builder{background:var(--soft);padding:14px;border-radius:14px;margin-top:16px}.builder label{margin-top:9px}#makeRows .line{padding:7px 0}#makeRows .line code{font-size:.85rem}#makeRows button{padding:6px 9px}#makePreview{background:var(--code);color:var(--ink)}
-</style><style>
-.emote-filters{display:grid;grid-template-columns:minmax(0,2fr) minmax(175px,1fr);gap:12px;align-items:end;margin:12px 0 18px}
-.emote-filters label{margin:0}.emote-filters input,.emote-filters select{margin-top:7px}
-.emote-stats{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
-.emote-card{border:1px solid var(--border);border-radius:13px;background:var(--panel);padding:14px;margin:11px 0}
-.emote-card h3{margin:0 0 4px;font-size:1.08rem}.emote-card .muted{margin:5px 0}
-.emote-card code{font-size:.9rem}.emote-card .emote-command{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;margin:8px 0}
-.emote-card .emote-command input{font-family:monospace;min-width:0}
-.emote-card .row{margin-top:8px}.emote-card .row button{font-size:.87rem}
-.emote-card .emote-options{display:flex;align-items:center;flex-wrap:wrap;gap:14px}
-.emote-card label.motion-label,.emote-motion-line label{display:inline-flex;align-items:center;gap:7px;font-weight:500;margin:0}
-.emote-card input[type=checkbox],.emote-motion-line input[type=checkbox]{width:auto;min-width:0;accent-color:var(--accent)}
-.emote-motion-line{margin:10px 0}.emote-motion-line p{margin:4px 0}
-.emote-note{font-size:.84rem;opacity:.93}
-@media(max-width:640px){.emote-filters{grid-template-columns:1fr}.emote-card .emote-command{grid-template-columns:1fr}.emote-card .row{align-items:stretch}.emote-card .row button{flex:1}}
-</style><style>
-:root{--bg:#f8f5ef;--panel:#fffefa;--ink:#3d4542;--muted:#61736a;--border:#dce3d8;--soft:#e5efe5;--accent:#547b67;--accentText:#fff;--code:#f1f5ee;--lav:#ad94bb;--lav-soft:#f0eaf4;--gold:#c49c55}
-body{background:linear-gradient(165deg,#fbfaf5 0%,#eef4ed 58%,#f5eff7 100%) fixed;color:var(--ink)}
-header{background:linear-gradient(115deg,#dcebdc 0%,#e2efdd 42%,#eee5f2 100%);border-bottom:2px solid #e8dfed;color:var(--ink)}
-header h1,header p{color:var(--ink)!important}header h1{letter-spacing:.01em}
-.gold-star{color:var(--gold);text-shadow:0 1px 3px #fff8d5}
-.tiny-star{font-size:1.6rem;color:var(--gold);line-height:1}
-.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.section-heading h2{margin:0}
-header button{background:#fffdfd;color:#536b5b;border:1px solid #d0d9cb}
-.panel{border:1px solid #e5e4da;box-shadow:0 9px 24px #4559480c;border-radius:19px}
-button{background:var(--accent);border-radius:11px}button:hover{filter:brightness(.95)}
-nav button{background:var(--lav-soft);color:#66546f;border:1px solid #e4d9ec}nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.pill{background:var(--lav-soft);color:#665873} .builder{background:#edf3eb;border:1px solid #dfebdc}
-.entry code,.emote-card code{background:var(--code)}.emote-card{border:1px solid #e2e6dd;box-shadow:0 3px 9px #30463008}
-.emote-card:nth-child(2n){border-left:3px solid #c9b8d2}.emote-card:nth-child(2n+1){border-left:3px solid #b2c9b0}
-.detail-text{white-space:pre-wrap;font-size:.9rem;line-height:1.65}.inline-label{display:flex;align-items:center;gap:10px;margin:0!important}.inline-label select{width:auto;max-width:270px}
-.secondary{background:var(--lav-soft)!important;color:#66546f!important}.emote-stats .pill{background:var(--lav-soft)}
-:focus-visible{outline-color:#a68ac0!important}
-html[data-theme="dark"]{--bg:#202523;--panel:#28322d;--ink:#e8eee7;--muted:#b9cbbb;--border:#44564c;--soft:#34483a;--accent:#9ac7a9;--accentText:#1d3426;--code:#25372c;--lav-soft:#3e344b;--gold:#e1c57c}
-html[data-theme="dark"] body{background:linear-gradient(165deg,#202b24 0%,#24242e 100%) fixed;color:var(--ink)}
-html[data-theme="dark"] header{background:linear-gradient(115deg,#395644 0%,#564662 100%)}
-html[data-theme="dark"] header h1,html[data-theme="dark"] header p{color:var(--ink)!important}
-html[data-theme="dark"] .panel{border-color:var(--border)}html[data-theme="dark"] .builder{background:#344639;border-color:#506650}
-html[data-theme="dark"] nav button{background:#3f3548;color:#e5d5ea;border-color:#574963}html[data-theme="dark"] nav button.active{background:var(--accent);color:#1d3426}
-html[data-theme="dark"] .pill,html[data-theme="dark"] .secondary{background:#443a4f!important;color:#e6d7ef!important}
-html[data-theme="dark"] .emote-card{border-color:var(--border)}html[data-theme="dark"] header button{background:#304439;color:#e3f5e7;border-color:#597b65}
-@media(max-width:650px){.inline-label{flex-wrap:wrap}.inline-label select{max-width:100%}nav{gap:6px}nav button{font-size:.84rem;padding:9px 10px}}
-</style><style id="v11-styles">
-:root{--bg:#e9ede3;--panel:#f7f5ee;--ink:#34463c;--muted:#566b5e;--border:#d3ddcf;--soft:#e2ebdf;--accent:#517b64;--accentText:#fff;--code:#e9eee6;--lav:#a58eb6;--lav-soft:#e9e0ee;--gold:#c49c55}
-body{background:linear-gradient(145deg,#e9ede3,#efeee5 55%,#e9e6ee) fixed;color:var(--ink)}
-header{background:linear-gradient(110deg,#d0dfcf,#e0e8d6 52%,#e1d6e8)}
-header .tagline-main{font-size:1.22rem;font-weight:760;letter-spacing:.04em;color:#405b4a!important;margin-top:9px}
-header .tagline-sub{font-size:1.04rem;font-weight:720;color:#80658f!important;margin-top:2px}
-header .tagline-help{font-size:.82rem;color:#53685a!important;margin-top:6px}
-header h1 small{white-space:nowrap;font-size:.75rem;vertical-align:middle;font-weight:560;opacity:.8}
-.panel{background:var(--panel);border-color:#dce0d5;padding:16px;margin-bottom:14px}
-nav{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-nav button{padding:10px 6px;font-size:.82rem;white-space:normal;line-height:1.35;min-height:48px}
-nav button.active{background:#547d66}
-.entry{padding:9px 0}.entry p{margin:4px 0}
-#source{min-height:150px}textarea::placeholder,input::placeholder{color:#8a988c;opacity:1}
-button{transition:filter .15s,transform .15s}button:active{transform:scale(.985)}
-button:disabled{opacity:.45;cursor:not-allowed}
-.small{padding:7px 10px}
-.quick-guide{border:1px solid #d5dfd3;background:#f8f6ee;border-radius:13px;padding:11px 15px;margin-bottom:12px;color:#455f4e}
-.quick-guide summary{cursor:pointer;font-weight:700}.quick-guide ol{margin:12px 0;padding-left:22px}.quick-guide li{margin:6px 0}.quick-guide p{font-size:.87rem;margin:6px 0}
-#cmdEntries .command-compact{padding:10px 12px;margin:7px 0;border:1px solid var(--border);border-left:3px solid #a6bda6;border-radius:12px;background:var(--panel)}
-#cmdEntries .command-compact:nth-child(even){border-left-color:#baa4c7}
-.command-head{display:flex;gap:10px;align-items:center;justify-content:space-between}
-.command-heading{flex:1;min-width:0}.command-heading strong{font-size:1rem;color:var(--ink);overflow-wrap:anywhere}.command-heading .brief{color:var(--muted);font-size:.86rem;line-height:1.35;margin:3px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.command-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.command-detail{margin-top:9px;padding:9px 2px 0;border-top:1px solid var(--border)}
-.command-detail summary{cursor:pointer;color:var(--accent);font-size:.9rem;font-weight:600}.command-detail p{line-height:1.55;margin:7px 0}
-.command-detail .row{margin-top:7px}.command-detail input{min-width:160px;flex:1}
-#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);max-width:90%;padding:11px 18px;border-radius:999px;background:#385c45;color:white;box-shadow:0 5px 22px #15211955;z-index:500;font-weight:650;text-align:center}
-html[data-theme="dark"] .quick-guide,html[data-theme="dark"] #cmdEntries .command-compact{background:var(--panel);border-color:var(--border)}
-html[data-theme="dark"] header .tagline-main{color:#e8f0e7!important}html[data-theme="dark"] header .tagline-sub{color:#e0cbe8!important}html[data-theme="dark"] header .tagline-help{color:#ccdccc!important}
-html[data-theme="dark"] .command-heading strong{color:var(--ink)}html[data-theme="dark"] .command-heading .brief{color:var(--muted)}
-@media(max-width:900px){nav{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:580px){nav{grid-template-columns:repeat(2,minmax(0,1fr))}.command-head{align-items:flex-start;flex-wrap:wrap}.command-actions{width:100%}.command-actions button{flex:1}.panel{padding:13px}}
-</style><style>
-#preview .pv-note{background:var(--lav-soft);border-left:4px solid var(--lav);padding:12px;border-radius:8px;line-height:1.6}
-#preview .pv-controls{align-items:end;margin:15px 0}#preview .pv-controls label{margin:0;min-width:150px}#preview .pv-controls select{margin-top:5px}
-#preview .pv-status{margin:12px 0}.pv-stage{border:1px solid var(--border);border-radius:14px;background:var(--code);padding:12px;max-height:410px;overflow:auto;color:var(--ink)}
-.pv-step{display:flex;align-items:start;gap:12px;border-bottom:1px solid var(--border);padding:8px 4px;opacity:.65}.pv-step:last-child{border:0}.pv-step.pv-seen{opacity:1;background:var(--soft);border-radius:8px}.pv-time{min-width:55px;font-size:.82rem;color:var(--muted)}.pv-content{min-width:0;flex:1}.pv-content code{display:block;white-space:pre-wrap;overflow-wrap:anywhere}.pv-content small{display:block;color:var(--muted);margin-top:3px;line-height:1.5}
-.pv-issue{padding:10px 12px;margin:7px 0;border-radius:8px;border-left:3px solid var(--lav);background:var(--lav-soft);line-height:1.5}.pv-error{border-left-color:#bf5e5e;background:#fff0ee;color:#812d32}.pv-warn{border-left-color:#bb9550;background:#fff8e9;color:#74531a}.pv-info{border-left-color:var(--lav)}.pv-good{padding:12px;background:var(--soft);border-radius:10px}
-html[data-theme="dark"] .pv-error{background:#462c31;color:#ffced0}html[data-theme="dark"] .pv-warn{background:#433b2c;color:#ffe5ab}
-@media(max-width:650px){#preview .pv-controls label{min-width:100%}#preview .pv-controls button{flex:1}}
-.make-wait-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:12px}.make-wait-row label{margin:0;white-space:nowrap}.make-wait-row input{width:90px;max-width:90px;flex:none;margin:0;min-height:42px}.make-wait-row .muted{font-size:.88rem}.make-wait-hint{font-size:.83rem;margin:5px 0 0}#makeWaitError:empty{display:none}
-</style></head><body><header><div class="header-inner"><div><h1>しお<span class="gold-star">✦</span>あんマクロエディタ <small>v1.2.1 プレビュー版</small></h1><p class="tagline-main">あなたの冒険　もうひと工夫</p><p class="tagline-sub">マクロ作成を気軽に　もっと楽しく♪</p><p class="tagline-help">日本語でコマンドを探して　選んで　組み合わせて</p></div><button id="theme" type="button" aria-label="ダークモードに切り替え">🌙 ダークモード</button></div></header><main><details class="quick-guide" id="quickGuide"><summary>✦ はじめての方へ　3ステップで使い方を見る</summary><ol><li>「総合辞書」や「エモート」で使いたいコマンドを探す</li><li>「取り込みに追加」または「かんたん作成」で組み合わせる</li><li>マクロをコピーしてFF14のマクロ編集画面に貼り付ける</li></ol><p>マクロは15行まで　作業内容はこのブラウザに自動保存されます</p></details><nav id="tabs"><button data-tab="import" class="active">📋 取り込み</button><button data-tab="make">✨ かんたん作成</button><button data-tab="craft">🛠️ クラフト作成</button><button data-tab="emotes">🎭 エモート294件</button><button data-tab="dict">📖 総合辞書540件</button><button data-tab="placeholders">🧩 代名詞35項目</button><button data-tab="preview">▶ 動作プレビュー</button><button data-tab="samples">🌷 おすすめ</button></nav><section class="panel" id="import"><h2>マクロを取り込む</h2><p class="muted">ネットで見つけたマクロをまとめて貼り付けてね　改行ごとに自動分割　空行は無視するよ</p><textarea id="source" spellcheck="false" placeholder="/p みなさん こんばんは！&#10;/wait 2&#10;/p イベントを開始します！&#10;/bow"></textarea><div class="row"><button id="allcopy">全文コピー</button><button id="clear" class="secondary">クリア</button><span id="count" class="pill"></span></div><p id="warning" class="warning" aria-live="polite"></p><h3>自動分割結果</h3><p class="muted">コピーを押してFF14のマクロ編集画面へ1行ずつ貼り付けてね　緑色はコピー操作済みの目印（貼り付け完了ではないよ）</p><div id="lines"></div><p class="muted">※ 15行を超えたらゲーム内で別々のマクロに登録してね　自動で連続実行はされないよ</p></section><section class="panel hidden" id="make"><h2>✨ かんたん作成</h2><p class="muted">チャット感覚で1行ずつ追加　日本語で選ぶだけでコマンドを作れるよ</p>
-<div class="row" style="justify-content:space-between"><strong>作成中のマクロ</strong><span id="makeCount" class="pill">0 / 15行</span></div>
-<textarea id="makePreview" spellcheck="false" readonly aria-label="作成中のマクロ" placeholder="下から1行追加するとここに表示されるよ" style="min-height:195px;margin-top:10px;font-family:monospace"></textarea>
-<p class="muted">行を選んで編集・削除・並べ替えができるよ　チャットの待機時間は必要なときだけ入力してね</p><div id="makeRows"></div>
-<div class="row" style="margin:12px 0"><button class="secondary small" id="makeUndo">↶ 元に戻す</button><button class="secondary small" id="makeRedo">↷ やり直す</button><button class="secondary small" id="makeClear">すべて消去</button></div>
-<div class="builder"><label for="makeType">追加する動作</label><select id="makeType"><option value="chat">チャットで発言</option><option value="emote">エモート</option><option value="command">コマンドを直接入力</option></select>
-<div id="makeChat"><label for="channel">発言先</label><select id="channel"><option value="s">Say（周囲）</option><option value="y" selected>Yell（叫ぶ）</option><option value="sh">Shout（シャウト）</option><option value="p">Party（パーティ）</option><option value="fc">FC（フリーカンパニー）</option><option value="echo">Echo（自分だけ）</option><option value="cwlinkshell1">CWLS 1</option><option value="cwlinkshell2">CWLS 2</option><option value="cwlinkshell3">CWLS 3</option><option value="cwlinkshell4">CWLS 4</option><option value="cwlinkshell5">CWLS 5</option><option value="cwlinkshell6">CWLS 6</option><option value="cwlinkshell7">CWLS 7</option><option value="cwlinkshell8">CWLS 8</option></select><label for="makeText">発言するセリフ</label><textarea id="makeText" placeholder="ここにセリフを入力" style="min-height:85px"></textarea>
-<div id="makeWaitRow" class="make-wait-row"><label for="makeWait">待機時間</label><input id="makeWait" type="number" inputmode="numeric" min="1" max="60" step="1" placeholder="なし" aria-describedby="makeWaitHint"><span class="muted">秒（空欄なら待機なし）</span></div><p class="muted make-wait-hint" id="makeWaitHint">2 と入力するとセリフの末尾に &lt;wait.2&gt; を追加するよ　※ Yell・Shoutの連続発言はゲーム内の制限にも注意してね</p><p id="makeWaitError" class="warning" role="alert" aria-live="polite"></p></div>
-<div id="makeEmote" class="hidden"><label for="emoteSearch">エモートを探す</label><input id="emoteSearch" placeholder="例：手を振る　拍手　wave"><label for="makeEmoteSelect">ゲーム内の名前　／　マクロ</label><select id="makeEmoteSelect"></select><div class="emote-motion-line"><label for="makeMotion"><input type="checkbox" id="makeMotion"> motion を追加（ログ表示なし）</label><p class="muted" id="makeEmoteHint">使えるエモートだけで motion を選べるよ</p></div></div>
-<div id="makeCommand" class="hidden"><label for="makeCustom">コマンド（編集できます）</label><input id="makeCustom" type="text" placeholder="例：/targetenemy  または  /ac &quot;アクション名&quot; &lt;t&gt;"><p class="muted">総合辞書の「かんたん作成で使う」からも選択できます。代名詞も必要に応じて入力してね。</p></div>
-<p><button id="makeAdd">＋ 1行追加</button></p></div><div class="row"><button id="makeImport">取り込み画面へ送る</button><button id="makeCopy" class="secondary">完成マクロをコピー</button></div><p class="muted">FF14のマクロは15行まで　取り込み画面では1行ずつコピーできるよ</p></section><section class="panel hidden" id="craft"><h2>🛠️ クラフト作成</h2><p class="muted">36種類のクラフトアクションをカテゴリ・検索で選べるよ。完成したマクロは「取り込み」へ送ることもできます。</p><iframe id="craftFrame" src="craft.html" title="クラフトマクロ作成" style="width:100%;height:75vh;min-height:520px;border:1px solid #d8e6db;border-radius:12px;background:#f3faf5"></iframe><p class="muted">※プレビュー版。クラフトのアクション条件・待機時間・実行可否はゲーム内で確認してください。</p></section><section class="panel hidden" id="emotes">
-<h2>🎭 エモート辞書 <small>294件・日本語対応</small></h2>
-<p class="muted">日本語名・コマンド・別名で検索。ゲーム内での動作は未検証の候補も含まれます。利用条件・習得状況により使えない場合があります。</p>
-<div class="emote-stats"><span id="emoteCounter" class="pill">辞書を準備中…</span><span class="muted">motion 対応コマンドはチェックで指定可能</span></div>
-<div class="emote-filters"><label for="emoteDictSearch">エモートを探す<input id="emoteDictSearch" type="search" placeholder="例：手を振る　勝利　/heart　dance"></label><label for="emoteDictCategory">種類で絞る<select id="emoteDictCategory"><option value="">すべて</option></select></label></div>
-<div id="emoteEntries" aria-live="polite"></div>
-<div class="row"><button id="emoteMore" class="secondary hidden" type="button">さらに表示</button></div>
-<p class="muted">うまく動かなかった場合は、該当項目の「報告文をコピー」を使って教えてね。ゲーム内への自動送信はしません。</p>
-</section>
-<section class="panel hidden" id="dict"><div class="section-heading"><h2>📖 総合コマンド辞書</h2><span class="tiny-star">✦</span></div>
-<p class="muted">日本語の説明・英語コマンド・別名から検索できるよ。候補を開いて引数や対象を編集したら、マクロに追加しよう。</p>
-<div class="emote-filters"><label for="cmdSearch">コマンドを検索<input id="cmdSearch" type="search" placeholder="例：近い敵　ターゲット　アイコン　/ac"></label><label for="cmdCategory">分類を選ぶ<select id="cmdCategory"><option value="">すべての分類</option></select></label></div>
-<div class="row"><label class="inline-label" for="cmdView">表示：<select id="cmdView"><option value="all">すべて（未評価も表示）</option><option value="reviewed">おすすめ（評価済み）</option></select></label><span id="cmdCounter" class="pill">読み込み中…</span></div><p class="muted">※おすすめはフレンドさんの評価を受けてから順次設定します。実行条件や最新パッチでの動作はゲーム内でご確認ください。</p><p class="muted">不具合の報告は各コマンドの「詳細 → 報告文をコピー」からどうぞ　<a href="https://github.com/Angelos2017/shioan-macro-editor/issues/new" target="_blank" rel="noopener noreferrer">GitHubに報告 ↗</a></p><div id="cmdEntries" aria-live="polite"></div><div class="row"><button id="cmdMore" class="secondary hidden" type="button">さらに表示</button></div></section>
-<section class="panel hidden" id="placeholders"><div class="section-heading"><h2>🧩 代名詞・便利な記法</h2><span class="tiny-star">✦</span></div><p class="muted">&lt;t&gt; は選択中の相手、&lt;me&gt; は自分。検索してコピー、または入力欄に挿入できるよ。</p>
-<div class="emote-filters"><label for="phSearch">代名詞を探す<input id="phSearch" type="search" placeholder="例：自分　パーティ　&lt;t&gt;　効果音"></label><label for="phCategory">種類を選ぶ<select id="phCategory"><option value="">すべて</option></select></label></div><p id="phCounter" class="pill"></p><label for="phScratch">組み立て・メモ欄（挿入先がないときはここへ）</label><textarea id="phScratch" rows="3" placeholder="例：/target &lt;2&gt;
-メモ欄に挿入して、できたらコピーしよう" style="min-height:95px"></textarea><div class="row"><button id="phCopy" type="button" class="small">メモ欄をコピー</button><button id="phToImport" type="button" class="small secondary">取り込みに追加</button></div><div id="phEntries"></div></section>
-<section class="panel hidden" id="preview"><div class="section-heading"><h2>▶ マクロ動作プレビュー</h2><span class="tiny-star">✦</span></div>
-<p class="muted">取り込み画面のマクロを読み取って　チャット・クラフト・エモートなどの実行順序と待機時間を確認できるよ</p>
-<p class="pv-note">これは<strong>簡易シミュレーション</strong>です。アクション成功・ゲーム内でのチャット表示・実際の発動間隔は保証しません。</p>
-<div class="row pv-controls"><label for="previewSpeed">再生速度<select id="previewSpeed"><option value="1">×1（実時間）</option><option value="2">×2</option><option value="4">×4</option><option value="8">×8</option></select></label><button id="previewPlay" type="button">▶ 再生</button><button id="previewReset" class="secondary" type="button">↺ 最初から</button><button id="previewAnalyze" class="secondary" type="button">✓ 再チェック</button></div>
-<div class="row pv-status"><span id="previewClock" class="pill" aria-live="polite">0 秒</span><span id="previewStatus" class="muted">停止中</span></div>
-<p class="muted" id="previewSummary"></p><div id="previewStage" class="pv-stage" aria-label="マクロの再生順序"></div>
-<h3>✓ スペル・文法・待機時間の簡易チェック</h3><div id="previewChecks" aria-live="polite"></div>
-<p class="muted">※ 再生速度を変更してもマクロ本文や待機秒数は変わらないよ。時刻はゲーム内の想定時間で表示しています。辞書にないものやゲームの状況に左右されるものは断定しません。</p></section>
-<section class="panel hidden" id="samples"><h2>おすすめマクロ</h2><p class="muted">最初は動作確認しやすい短い例を用意したよ。取り込んで自由に編集できるよ。</p><div id="examples"></div></section><section class="panel"><h3>使い方と注意</h3><p>① マクロを貼り付ける → ② 自動分割された各行をコピー → ③ FF14のマクロ編集画面へ1行ずつ貼り付け</p><p class="muted">このツールは非公式のファン制作ツール（プレビュー版）です<br>FF14内での動作はご自身でご確認ください<br>特に戦闘・製作マクロはパッチや実行状況によって動作が変わる場合があります<br>なお マクロの自動連続実行やゲームへの直接書き込みには対応していません</p></section></main><footer>しお✦あんマクロエディタ v1.2.1 プレビュー版 — ブラウザで使えるツールです</footer><script>
-let toastTimer;
-function showToast(message){let el=document.getElementById('toast');if(!el){el=document.createElement('div');el.id='toast';el.setAttribute('role','status');el.setAttribute('aria-live','polite');document.body.append(el)}el.textContent=message;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,2200)}
-</script><script>const $=id=>document.getElementById(id);const tabs=[...document.querySelectorAll('[data-tab]')];function show(id){tabs.forEach(b=>b.classList.toggle('active',b.dataset.tab===id));['import','make','craft','emotes','dict','placeholders','samples','preview'].forEach(t=>$(t).classList.toggle('hidden',t!==id))}tabs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.tab)));const oldEntries=[['パーティに発言','チャット','/p よろしくお願いします！','パーティメンバーに発言します。'],['周囲に発言','チャット','/s こんにちは！','周囲のプレイヤーに発言します。'],['シャウト','チャット','/sh イベント開始です！','広い範囲に発言します。'],['自分だけに表示','チャット','/echo 準備完了！','自分のチャット欄にだけ表示します。'],['待つ','制御','/wait 2','次の行まで指定秒数待ちます。'],['アクション','戦闘','/ac "ケアル" <t>','対象に指定したアクションを使います。アクション名と実行条件に注意。'],['製作アクション','クラフト','/ac "作業" <wait.3>','製作アクションを実行する例。利用可能なアクションと待機時間を確認してください。'],['お辞儀','エモート','/bow','お辞儀のエモートをします。'],['マクロアイコン','表示','/micon "お辞儀" emote','マクロのアイコンを指定する例です。']];const samples=[['パーティ挨拶','/p みなさん、こんばんは！\n/wait 2\n/p よろしくお願いします！'],['イベント開始','/sh まもなくイベントを開始します！\n/wait 3\n/sh それではスタート！'],['お辞儀と挨拶','/bow\n/s よろしくお願いします！'],['自分用の確認メモ','/echo 準備完了！']];let copied=new Set();function lines(){return $('source').value.split(/\r\n|\n|\r/).filter(s=>s.trim().length>0)}async function copy(t){try{await navigator.clipboard.writeText(t);showToast('コピーしました！');return true}catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();if(!ok)alert('コピーできませんでした。ブラウザの権限を確認してください。');else showToast('コピーしました！');return ok}}function render(){const arr=lines();$('count').textContent=`${arr.length} 行 / 15行`;$('warning').textContent=arr.length>15?'⚠ 15行を超えています。複数のマクロに分けてください。':'';const target=$('lines');target.replaceChildren();arr.forEach((line,i)=>{const div=document.createElement('div');div.className='line';const n=document.createElement('span');n.className='num';n.textContent=i+1;const code=document.createElement('code');code.textContent=line;const b=document.createElement('button');b.className='small'+(copied.has(i)?' done':'');b.textContent=copied.has(i)?'✓ コピー済':'コピー';b.onclick=async()=>{if(await copy(line)){copied.add(i);b.classList.add('done');b.textContent='✓ コピー済'}};div.append(n,code,b);target.append(div)})}function setSource(s){$('source').value=s;copied.clear();render();show('import')}$('source').addEventListener('input',()=>{copied.clear();render()});$('clear').onclick=()=>setSource('');$('allcopy').onclick=()=>copy($('source').value);function renderDictOld(){const q=$('search').value.toLowerCase();const area=$('dictionary');area.replaceChildren();entries.filter(e=>e.join(' ').toLowerCase().includes(q)).forEach(e=>{const div=document.createElement('div');div.className='entry';const h=document.createElement('strong');h.textContent=e[0]+' · '+e[1];const p=document.createElement('p');p.textContent=e[3];const c=document.createElement('code');c.textContent=e[2];const b=document.createElement('button');b.className='small';b.textContent='取り込み画面で使う';b.onclick=()=>setSource(e[2]);div.append(h,p,c,b);area.append(div)})}/* dictionary controls initialized by v1.2.1 プレビュー版 */const ex=$('examples');samples.forEach(e=>{const div=document.createElement('div');div.className='entry';const h=document.createElement('strong');h.textContent=e[0];const c=document.createElement('code');c.textContent=e[1];const b=document.createElement('button');b.className='small';b.textContent='このマクロを使う';b.onclick=()=>setSource(e[1]);div.append(h,c,b);ex.append(div)});render();</script><script src="theme-v10.js"></script><script src="emotes-v09.js"></script><script src="builder-v10.js"></script><script src="emote-ui-v09.js"></script><script src="commands-v10.js"></script><script src="placeholders-v10.js"></script><script src="dictionary-v10.js"></script><script>window.addEventListener('message',event=>{const f=document.getElementById('craftFrame');if(event.source!==f.contentWindow)return;const d=event.data;if(!d||d.type!=='shioan-craft-transfer'||typeof d.macro!=='string')return;if(d.macro.length>5000)return;const src=document.getElementById('source');if(!src)return;src.value=d.macro;src.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('[data-tab="import"]').click();window.scrollTo({top:0,behavior:'smooth'});});</script><script>
-(()=>{'use strict';
- const source=document.getElementById('source'),clear=document.getElementById('clear');
- const K='shioan-import-v09',B='shioan-import-v09-backup';
- try{const saved=localStorage.getItem(K);if(saved!==null){source.value=saved;source.dispatchEvent(new Event('input',{bubbles:true}));}}catch(e){}
- function persist(){try{localStorage.setItem(K,source.value)}catch(e){}}
- source.addEventListener('input',persist);
- // setSource is invoked by other app screens; keep those changes in autosave too.
- const originalSetSource=window.setSource;
- if(typeof originalSetSource==='function')window.setSource=function(value){originalSetSource(value);source.dispatchEvent(new Event('input',{bubbles:true}))};
- clear.onclick=()=>{
-   if(!confirm('作成中のマクロとブラウザに自動保存された内容の両方を削除します。\n削除した内容は元に戻せません。\n\n両方クリアしますか？'))return;
-   try{localStorage.removeItem(K);localStorage.removeItem(B)}catch(e){}
-   source.value='';copied.clear();render();
-   showToast('作業中のマクロと保存データをクリアしました');
- };
-})();
-</script><script>
-(function(){const source=document.getElementById('source');
- document.getElementById('phCopy').addEventListener('click',()=>copy(document.getElementById('phScratch').value));
- document.getElementById('phToImport').addEventListener('click',()=>{const text=document.getElementById('phScratch').value.trim();if(!text)return;const existing=lines();const add=text.split(/\r?\n/).filter(x=>x.trim());if(existing.length+add.length>15&&!confirm('15行を超えるけれど追加する？'))return;setSource(source.value.trimEnd()+'\n'+text);source.dispatchEvent(new Event('input',{bubbles:true}));});
-})();
-</script><script src="preview-v12.js"></script></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f5f7">
+<title>しお✦あんエディタ v3.9.1 TEST</title>
+<style>
+:root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
+body.dark{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",Meiryo,sans-serif}
+.app{height:100dvh;max-width:760px;margin:auto;display:flex;flex-direction:column}
+.top{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:4px 8px}
+.brandrow{height:25px;display:flex;align-items:center;gap:5px;min-width:0}
+.brand{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;font-size:14px}
+.brand small{font-weight:400;font-size:9px;color:var(--muted);margin-left:4px}
+input,textarea,button{font:inherit;color:var(--ink);border:1px solid var(--line)}
+button{flex:0 0 auto;height:28px;min-height:28px;background:var(--btn);border-radius:6px;padding:2px 6px;font-size:12px}
+button:active{transform:translateY(1px)}
+.mode{height:25px;min-height:25px;min-width:31px;padding:1px 5px}
+.titleRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px;align-items:center;margin-top:2px}
+#title{width:100%;height:31px;background:var(--paper);border-radius:7px;padding:4px 8px;font-size:15px;outline:none}
+#title:focus,textarea:focus{border-color:var(--accent)}
+.counter{font-size:9px;color:var(--muted);white-space:nowrap;min-width:33px;text-align:right}
+.counter.warn{color:var(--warn);font-weight:700}
+.toolbar{display:flex;align-items:center;gap:3px;overflow-x:auto;padding-top:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.toolbar::-webkit-scrollbar{display:none}.group{display:flex;gap:3px;align-items:center;flex:0 0 auto}
+.sep{width:1px;height:19px;background:var(--line);margin:0 1px;flex:0 0 auto}
+.iconbtn{min-width:29px;padding:2px 5px}
+.num{width:42px;height:28px;border-radius:6px;background:var(--paper);padding:2px 3px;text-align:center;font-size:12px}
+.color{width:30px;height:28px;padding:2px;border-radius:6px;background:var(--paper)}
+.editor{position:relative;flex:1 1 auto;min-height:0;padding:4px 8px 5px;display:flex;background:var(--bg)}
+textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--paper);border-radius:10px;padding:10px 12px 22px;font-size:17px;line-height:1.65;outline:none;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.bodyCount{position:absolute;right:15px;bottom:9px;z-index:2;padding:1px 4px;border-radius:5px;background:color-mix(in srgb,var(--paper) 88%,transparent);font-size:9px;color:var(--muted);pointer-events:none}
+.bodyCount.warn{color:var(--warn);font-weight:700}
+.bottom{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:4px;padding:4px 8px calc(4px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--line)}
+.bottom button{height:29px;min-height:29px;padding:2px 4px;font-size:11px}.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.previewOverlay{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;overflow:auto;padding:10px}.previewOverlay.open{display:block}
+.previewCard{max-width:760px;margin:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:13px}
+.previewTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.previewTitle{font-size:21px;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:11px}
+.previewBody{font-family:Arial,"Yu Gothic",Meiryo,sans-serif;font-size:12px;line-height:1.65;white-space:pre-wrap;word-break:break-word;min-height:120px}
+.hidden{display:inline-block;background:#555;color:#fff;padding:2px 8px;border-radius:3px;font-size:12px}
+
+.colorTray{display:none;margin-top:4px;padding:7px;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+.colorTray.open{display:block}
+.colorTrayHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:11px;color:var(--muted)}
+.colorSwatches{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.colorSwatches::-webkit-scrollbar{display:none}
+.colorDot{position:relative;flex:0 0 29px;width:29px;height:29px;min-height:29px;border-radius:7px;border:1px solid var(--line);padding:0}
+.colorDot.selected{outline:3px solid var(--ink);outline-offset:2px}
+.colorDot.selected::after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:17px;color:#fff;text-shadow:0 1px 3px #000}
+.freeColorInline{display:flex;align-items:center;gap:6px;margin-top:6px}
+.freeColorInline span{font-size:11px;color:var(--muted)}
+.freeColorInline input[type=color]{position:static;width:38px;height:29px;opacity:1;pointer-events:auto;border:1px solid var(--line);border-radius:6px;padding:2px;background:var(--paper)}
+.freeColorInline button{height:29px}
+
+.rainbowDot{background:conic-gradient(#ff3030,#ffd43b,#46b95c,#38a9e8,#4d5ee8,#a64bd4,#ff3030)}
+.rainbowDot::after{content:'+';position:absolute;inset:0;display:grid;place-items:center;font-size:19px;font-weight:900;color:#fff;text-shadow:0 1px 4px #000}
+.currentColorDisplay{display:inline-block;width:38px;height:29px;border:1px solid var(--line);border-radius:6px;background:#ff0000}
+.nativeColorPicker{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+
+
+.freeColorPanel{display:none;margin-top:5px;padding:8px;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+.freeColorPanel.open{display:block}
+.freeColorTitle{font-size:12px;font-weight:700;margin-bottom:5px}
+.freeColorPanel label{display:grid;grid-template-columns:58px 1fr;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin:3px 0}
+.freeColorPanel input[type=range]{width:100%}
+.freeColorBottom{display:flex;align-items:center;gap:7px;margin-top:7px}
+.freePreview{width:38px;height:29px;border:1px solid var(--line);border-radius:6px;background:#ff0000}
+.freeColorBottom button{margin-left:auto}
+
+@media(max-width:390px){.brand{font-size:13px}.brand small{font-size:8px}}
+@media(max-height:600px){.top{padding-top:2px;padding-bottom:3px}.brandrow{height:22px}.mode{height:22px;min-height:22px}#title{height:29px}.toolbar{padding-top:2px}.editor{padding-top:3px}.bottom{padding-top:3px;padding-bottom:calc(3px + env(safe-area-inset-bottom))}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="brandrow">
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.9.1 TEST</small></div>
+  <button id="mode" class="mode" onclick="toggleMode()" aria-label="ダークモード">🌙</button>
+ </div>
+ <div class="titleRow">
+  <input id="title" maxlength="50" placeholder="タイトル">
+  <span id="tcBox" class="counter"><span id="tc">0</span>/50</span>
+ </div>
+ <div class="toolbar">
+  <div class="group">
+   <button id="colorButton" onclick="openColorPalette()">文字色</button>
+  </div>
+  <span class="sep"></span>
+  <div class="group">
+   <button onclick="sizeWrap(10)">10</button><button onclick="sizeWrap(12)">12</button><button onclick="sizeWrap(18)">18</button><button onclick="sizeWrap(24)">24</button><button onclick="sizeWrap(32)">32</button>
+  </div>
+  <span class="sep"></span>
+  <div class="group">
+   <button class="iconbtn" onclick="wrap('[b]','[/b]')"><b>B</b></button>
+   <button class="iconbtn" onclick="wrap('[i]','[/i]')"><i>I</i></button>
+   <button class="iconbtn" onclick="wrap('[u]','[/u]')"><u>U</u></button>
+   <button class="iconbtn" onclick="wrap('[s]','[/s]')"><s>S</s></button>
+  </div>
+  <span class="sep"></span>
+  <div class="group"><button onclick="wrap('[left]','[/left]')">左</button><button onclick="wrap('[center]','[/center]')">中</button><button onclick="wrap('[right]','[/right]')">右</button></div>
+  <span class="sep"></span>
+  <div class="group"><button onclick="addLink()">リンク</button><button onclick="wrap('[hb]','[/hb]')">隠す</button></div><span class="sep"></span><div class="group"><button onclick="clearAll()">クリア</button></div>
+ </div>
+<div id="colorTray" class="colorTray">
+<div class="colorTrayHead"><span>使用する文字色</span><button onclick="closeColorPalette()">閉じる</button></div>
+<div class="colorSwatches"><button class="colorDot" style="background:#000000" data-color="#000000" onclick="selectSwatch(this)" aria-label="#000000"></button><button class="colorDot" style="background:#666666" data-color="#666666" onclick="selectSwatch(this)" aria-label="#666666"></button><button class="colorDot" style="background:#FFFFFF" data-color="#FFFFFF" onclick="selectSwatch(this)" aria-label="#FFFFFF"></button><button class="colorDot selected" style="background:#FF0000" data-color="#FF0000" onclick="selectSwatch(this)" aria-label="#FF0000"></button><button class="colorDot" style="background:#FF7A00" data-color="#FF7A00" onclick="selectSwatch(this)" aria-label="#FF7A00"></button><button class="colorDot" style="background:#FFD400" data-color="#FFD400" onclick="selectSwatch(this)" aria-label="#FFD400"></button><button class="colorDot" style="background:#33A852" data-color="#33A852" onclick="selectSwatch(this)" aria-label="#33A852"></button><button class="colorDot" style="background:#00A6A6" data-color="#00A6A6" onclick="selectSwatch(this)" aria-label="#00A6A6"></button><button class="colorDot" style="background:#0088FF" data-color="#0088FF" onclick="selectSwatch(this)" aria-label="#0088FF"></button><button class="colorDot" style="background:#2457D6" data-color="#2457D6" onclick="selectSwatch(this)" aria-label="#2457D6"></button><button class="colorDot" style="background:#1A0A52" data-color="#1A0A52" onclick="selectSwatch(this)" aria-label="#1A0A52"></button><button class="colorDot" style="background:#7B3FC6" data-color="#7B3FC6" onclick="selectSwatch(this)" aria-label="#7B3FC6"></button><button class="colorDot" style="background:#E649A0" data-color="#E649A0" onclick="selectSwatch(this)" aria-label="#E649A0"></button><button class="colorDot" style="background:#8B4513" data-color="#8B4513" onclick="selectSwatch(this)" aria-label="#8B4513"></button><button class="colorDot" style="background:#B8860B" data-color="#B8860B" onclick="selectSwatch(this)" aria-label="#B8860B"></button><button class="colorDot" style="background:#A9A9A9" data-color="#A9A9A9" onclick="selectSwatch(this)" aria-label="#A9A9A9"></button><button id="rainbowSwatch" class="colorDot rainbowDot" onclick="openFreeColor()" aria-label="自由色" title="自由色"></button></div>
+<div class="freeColorInline"><span>現在色</span><span id="currentColorDisplay" class="currentColorDisplay" aria-hidden="true"></span><span id="currentHex">#FF0000</span><button onclick="applyCurrentColor()">この色を使う</button></div>
+</div><div id="freeColorPanel" class="freeColorPanel">
+ <div class="freeColorTitle">自由色</div>
+ <label>色相 <input id="hueRange" type="range" min="0" max="360" value="0"></label>
+ <label>鮮やかさ <input id="satRange" type="range" min="0" max="100" value="100"></label>
+ <label>明るさ <input id="lightRange" type="range" min="0" max="100" value="50"></label>
+ <div class="freeColorBottom"><span id="freePreview" class="freePreview"></span><span id="freeHex">#FF0000</span><button onclick="confirmFreeColor()">この色にする</button></div>
+</div>
+</header>
+
+<main class="editor">
+ <textarea id="body" maxlength="10000" placeholder="ここに日記を書きます&#10;&#10;FINAL FANTASY XIV The Lodestone向けに個人制作した非公式ファンツールです&#10;公式サービスとは関係ありません"></textarea>
+ <span id="bcBox" class="bodyCount"><span id="bc">0</span>/10000</span>
+</main>
+
+<footer class="bottom">
+ <button onclick="showPreview()">プレビュー</button>
+ <button onclick="copyTitle()">タイトルコピー</button>
+ <button class="accent" onclick="copyBody()">本文コピー</button>
+</footer>
+</div>
+
+
+<div id="preview" class="previewOverlay">
+ <div class="previewCard">
+  <div class="previewTop"><b>プレビュー　v3.9.1 TEST</b><button onclick="hidePreview()">閉じる</button></div>
+  <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
+ </div>
+</div>
+
+
+
+<script>
+const title=document.getElementById('title'),body=document.getElementById('body'),tc=document.getElementById('tc'),bc=document.getElementById('bc'),tcBox=document.getElementById('tcBox'),bcBox=document.getElementById('bcBox'),pt=document.getElementById('pt'),pb=document.getElementById('pb');
+let savedStart=0,savedEnd=0;
+function rememberSelection(){savedStart=body.selectionStart;savedEnd=body.selectionEnd}
+['select','keyup','mouseup','touchend','input'].forEach(ev=>body.addEventListener(ev,rememberSelection));
+
+// Preserve the editor's scroll position when toolbar actions restore the caret.
+function captureEditorView(){return {top:body.scrollTop,left:body.scrollLeft,pageX:window.scrollX,pageY:window.scrollY}}
+function restoreEditorView(view){
+  body.scrollTop=view.top;body.scrollLeft=view.left;
+  window.scrollTo(view.pageX,view.pageY);
+  requestAnimationFrame(()=>{
+    body.scrollTop=view.top;body.scrollLeft=view.left;
+    window.scrollTo(view.pageX,view.pageY);
+  });
+}
+function focusEditorWithoutJump(){try{body.focus({preventScroll:true})}catch(_){body.focus()}}
+function wrap(a,b){const view=captureEditorView();let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const v=body.value;body.value=v.slice(0,s)+a+v.slice(s,e)+b+v.slice(e);focusEditorWithoutJump();body.setSelectionRange(s+a.length,e+a.length);savedStart=s+a.length;savedEnd=e+a.length;changed();restoreEditorView(view)}
+function sizeWrap(n){wrap('[size='+n+']','[/size]')}function openColorPalette(){
+ document.getElementById('colorTray').classList.toggle('open');
+}
+function closeColorPalette(){document.getElementById('colorTray').classList.remove('open')}
+function setCurrentColor(hex,swatch){
+ hex=hex.toUpperCase();
+ document.getElementById('currentHex').textContent=hex;
+ document.getElementById('currentColorDisplay').style.background=hex;
+ document.querySelectorAll('.colorDot').forEach(x=>x.classList.remove('selected'));
+ if(swatch)swatch.classList.add('selected');
+}
+function selectSwatch(el){setCurrentColor(el.dataset.color,el)}
+function openFreeColor(){
+ document.getElementById('freeColorPanel').classList.toggle('open');
+}
+function hslToHex(h,s,l){
+ s/=100;l/=100;
+ const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;
+ let r=0,g=0,b=0;
+ if(h<60){r=c;g=x}else if(h<120){r=x;g=c}else if(h<180){g=c;b=x}else if(h<240){g=x;b=c}else if(h<300){r=x;b=c}else{r=c;b=x}
+ return '#'+[r,g,b].map(v=>Math.round((v+m)*255).toString(16).padStart(2,'0')).join('').toUpperCase();
+}
+function updateFreePreview(){
+ const hex=hslToHex(+hueRange.value,+satRange.value,+lightRange.value);
+ freePreview.style.background=hex;freeHex.textContent=hex;
+}
+['hueRange','satRange','lightRange'].forEach(id=>document.getElementById(id).addEventListener('input',updateFreePreview));
+function confirmFreeColor(){
+ const hex=document.getElementById('freeHex').textContent.trim().toUpperCase();
+ setCurrentColor(hex,document.getElementById('rainbowSwatch'));
+ document.getElementById('freeColorPanel').classList.remove('open');
+}
+function applyCurrentColor(){
+  const view=captureEditorView();
+  let s=body.selectionStart,e=body.selectionEnd;
+  if(document.activeElement!==body){s=savedStart;e=savedEnd}
+  const v=body.value;
+  const hex=document.getElementById('currentHex').textContent.toUpperCase();
+  const open='[color='+hex+']',close='[/color]';
+  // With no selection, insert an empty pair and place the caret inside.
+  if(s===e){
+    body.value=v.slice(0,s)+open+close+v.slice(e);
+    changed();focusEditorWithoutJump();body.setSelectionRange(s+open.length,s+open.length);
+    savedStart=s+open.length;savedEnd=savedStart;
+    restoreEditorView(view);return;
+  }
+  const selected=v.slice(s,e);
+  const whole=selected.match(/^\[color=#[0-9A-Fa-f]{6}\]([\s\S]*?)\[\/color\]$/i);
+  if(whole){
+    const rep=open+whole[1]+close;
+    body.value=v.slice(0,s)+rep+v.slice(e);
+    changed();focusEditorWithoutJump();body.setSelectionRange(s+open.length,s+open.length+whole[1].length);
+    savedStart=body.selectionStart;savedEnd=body.selectionEnd;
+    restoreEditorView(view);return;
+  }
+  const before=v.slice(0,s),after=v.slice(e);
+  const om=before.match(/\[color=#[0-9A-Fa-f]{6}\]$/i);
+  const cm=after.match(/^\[\/color\]/i);
+  if(om&&cm){
+    const os=s-om[0].length,ce=e+cm[0].length;
+    const inner=v.slice(s,e),rep=open+inner+close;
+    body.value=v.slice(0,os)+rep+v.slice(ce);
+    changed();focusEditorWithoutJump();body.setSelectionRange(os+open.length,os+open.length+inner.length);
+    savedStart=body.selectionStart;savedEnd=body.selectionEnd;
+    restoreEditorView(view);return;
+  }
+  body.value=v.slice(0,s)+open+selected+close+v.slice(e);
+  changed();focusEditorWithoutJump();body.setSelectionRange(s+open.length,e+open.length);
+  savedStart=body.selectionStart;savedEnd=body.selectionEnd;
+  restoreEditorView(view);
+}
+
+function addLink(){const view=captureEditorView();let s=body.selectionStart,e=body.selectionEnd;if(document.activeElement!==body){s=savedStart;e=savedEnd}const u=prompt('リンク先URLを入力してください','https://');if(!u)return;const v=body.value,t=v.slice(s,e)||'リンク';body.value=v.slice(0,s)+'[url='+u+']'+t+'[/url]'+v.slice(e);focusEditorWithoutJump();savedStart=s;savedEnd=s+('[url='+u+']'+t+'[/url]').length;body.setSelectionRange(savedStart,savedEnd);changed();restoreEditorView(view)}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+// Parse Lodestone-style nested tags with a stack instead of flat regex replacements.
+function render(s){
+  const root={name:'root',children:[]};
+  const stack=[root];
+  const tagRe=/\[(\/?)(b|i|u|s|left|center|right|hb|size|color|url)(?:=([^\]\r\n]*))?\]/gi;
+  let pos=0,m;
+  const addText=t=>{if(t)stack[stack.length-1].children.push({text:t})};
+  while((m=tagRe.exec(s))!==null){
+    addText(s.slice(pos,m.index));pos=tagRe.lastIndex;
+    const closing=!!m[1],name=m[2].toLowerCase(),arg=m[3];
+    const validArg=(name==='size'?(!closing&&arg!==undefined&&/^(1\d|2\d|3[0-2])$/.test(arg)):
+      name==='color'?(!closing&&arg!==undefined&&/^#[0-9a-f]{6}$/i.test(arg)):
+      name==='url'?(!closing&&arg!==undefined&&arg.length>0):arg===undefined);
+    if(closing){
+      if(arg===undefined&&stack.length>1&&stack[stack.length-1].name===name){stack.pop()}
+      else addText(m[0]);
+    }else if(validArg){
+      const node={name,arg,children:[],opening:m[0]};
+      stack[stack.length-1].children.push(node);stack.push(node);
+    }else addText(m[0]);
+  }
+  addText(s.slice(pos));
+  // Show unmatched opening tags literally rather than silently swallowing them.
+  const unclosed=new Set(stack.slice(1));
+  function html(nodes){return nodes.map(n=>{
+    if(Object.prototype.hasOwnProperty.call(n,'text'))return esc(n.text);
+    const inside=html(n.children);
+    if(unclosed.has(n))return esc(n.opening)+inside;
+    switch(n.name){
+      case 'b':case 'i':case 'u':case 's':return '<'+n.name+'>'+inside+'</'+n.name+'>';
+      case 'size':return '<span style="font-size:'+n.arg+'px">'+inside+'</span>';
+      case 'color':return '<span style="color:'+n.arg+'">'+inside+'</span>';
+      case 'left':case 'center':case 'right':return '<span style="display:block;text-align:'+n.name+'">'+inside+'</span>';
+      case 'url':return '<u>'+inside+'</u>';
+      case 'hb':return '<span class="hidden">クリックして表示</span>';
+      default:return inside;
+    }
+  }).join('')}
+  return html(root.children);
+}
+
+function changed(){tc.textContent=title.value.length;bc.textContent=body.value.length;tcBox.classList.toggle('warn',title.value.length>=45);bcBox.classList.toggle('warn',body.value.length>=9500);localStorage.setItem('lodestoneTitle',title.value);localStorage.setItem('lodestoneBody',body.value)}
+function showPreview(){pt.textContent=title.value||'タイトル';pb.innerHTML=body.value?render(body.value):'ここにプレビューが表示されます。';document.getElementById('preview').classList.add('open')}
+function hidePreview(){document.getElementById('preview').classList.remove('open')}
+async function cp(s,m){try{await navigator.clipboard.writeText(s);alert(m)}catch(e){prompt('コピーしてください',s)}}function copyTitle(){cp(title.value,'タイトルをコピーしました')}function copyBody(){cp(body.value,'本文をコピーしました')}
+function clearAll(){
+ if(!title.value&&!body.value)return;
+ if(!confirm('タイトルと本文をすべて消しますか？'))return;
+ title.value='';body.value='';savedStart=0;savedEnd=0;
+ localStorage.removeItem('lodestoneTitle');
+ localStorage.removeItem('lodestoneBody');
+ changed();body.focus();
+}
+function mode(d){document.body.classList.toggle('dark',d);document.getElementById('mode').textContent=d?'☀️':'🌙';localStorage.setItem('lodestoneDark',d?'1':'0')}function toggleMode(){mode(!document.body.classList.contains('dark'))}
+title.value=localStorage.getItem('lodestoneTitle')||'';body.value=localStorage.getItem('lodestoneBody')||'';mode(localStorage.getItem('lodestoneDark')==='1');title.oninput=changed;body.oninput=changed;changed();rememberSelection();
+</script>
+</body></html>
