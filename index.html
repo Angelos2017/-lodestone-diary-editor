@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f5f7">
-<title>しお✦あんエディタ v3.10.4 TEST</title>
+<title>しお✦あんエディタ v3.10.4</title>
 <style>
 :root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
 body[data-theme="dark"]{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
@@ -17,7 +17,7 @@ body[data-theme="midnight"]{--bg:#121b30;--paper:#23314c;--ink:#edf1fa;--muted:#
 *{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",Meiryo,sans-serif}
 .app{height:100dvh;max-width:760px;margin:auto;display:flex;flex-direction:column}
-.top{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:4px 8px}
+.top{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:4px 8px;border-radius:10px}
 .brandrow{height:25px;display:flex;align-items:center;gap:5px;min-width:0}
 .brand{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;font-size:14px}
 .credit{white-space:nowrap;font-size:9px;color:var(--muted);flex:0 0 auto}.brand small{font-weight:400;font-size:9px;color:var(--muted);margin-left:4px}
@@ -40,7 +40,7 @@ button:active{transform:translateY(1px)}
 textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--paper);border-radius:10px;padding:10px 12px 22px;font-size:17px;line-height:1.65;outline:none;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .bodyCount{position:absolute;right:15px;bottom:9px;z-index:2;padding:1px 4px;border-radius:5px;background:color-mix(in srgb,var(--paper) 88%,transparent);font-size:9px;color:var(--muted);pointer-events:none}
 .bodyCount.warn{color:var(--warn);font-weight:700}
-.bottom{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:4px;padding:4px 8px calc(4px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--line)}
+.bottom{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:4px;padding:4px 8px calc(4px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--line);border-radius:10px}
 .bottom button{height:29px;min-height:29px;padding:2px 4px;font-size:11px}.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
 .previewOverlay{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;overflow:auto;padding:10px}.previewOverlay.open{display:block}
 .previewCard{max-width:760px;margin:auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:13px}
@@ -98,7 +98,8 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 /* Saved snippets: small, mobile-friendly modal */
 .snippetOverlay{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:110;display:none;align-items:center;justify-content:center;padding:14px}
 .snippetOverlay.open{display:flex}
-.snippetPanel{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:12px;width:min(560px,100%);max-height:88dvh;overflow:auto;padding:16px;box-shadow:0 12px 40px #0004}
+.snippetPanel{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:12px;width:min(560px,100%);max-height:88dvh;overflow:auto;padding:16px;box-shadow:0 12px 40px #0004;scrollbar-color:var(--line) transparent;scrollbar-width:thin}
+.snippetPanel::-webkit-scrollbar{width:9px}.snippetPanel::-webkit-scrollbar-track{background:transparent;border-radius:12px}.snippetPanel::-webkit-scrollbar-thumb{background:var(--line);border-radius:12px;border:2px solid var(--paper)}
 .snippetHead,.snippetItemHead,.snippetActions{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .snippetPanel h2{font-size:17px;margin:0}.snippetPanel h3{font-size:14px;margin:0}.snippetPanel p{font-size:12px;color:var(--muted)}
 .snippetPanel input,.snippetPanel textarea{width:100%;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px;margin:5px 0 9px;box-sizing:border-box}
@@ -113,7 +114,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 <div class="app">
 <header class="top">
  <div class="brandrow">
-  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.10.4 TEST</small></div>
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.10.4</small></div>
   <span class="credit">♡ Created by 塩餡</span><button class="updateBtn" type="button" onclick="showReleaseNotes()" aria-label="更新情報">更新<span id="updateNew" class="newBadge" hidden>NEW</span></button><select id="themeSelect" class="themeSelect" aria-label="配色テーマ" onchange="setTheme(this.value)"><option value="light">ライト</option><option value="dark">ダーク</option><option value="sakura">桜</option><option value="matcha">抹茶</option><option value="sepia">セピア</option><option value="midnight">星霜</option></select>
  </div>
  <div class="titleRow">
@@ -183,7 +184,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 <div id="releaseOverlay" class="releaseOverlay" role="dialog" aria-modal="true" aria-label="更新情報" onclick="if(event.target===this)hideReleaseNotes()">
  <section class="releasePanel">
   <div class="releaseHead"><strong>📋 更新情報</strong><button type="button" onclick="hideReleaseNotes()">閉じる</button></div>
-  <h3>v3.10.4 — 定型文</h3><p>挨拶や告知リンクなどを名前付きで登録し、本文のカーソル位置に挿入できます。定型文はこの端末のブラウザに保存されます。</p>
+  <h3>v3.10.4 — 定型文・角丸調整</h3><p>挨拶や告知リンクなどを名前付きで登録し、本文のカーソル位置に挿入できます。定型文はこの端末のブラウザに保存されます。ヘッダー・フッターと定型文ウィンドウのスクロールバーの見た目も整えました。</p>
   <h3>v3.10.1 — 配色と更新案内</h3>
   <ul><li>6種類の配色テーマを調整。桜・抹茶・セピアも背景や入力欄まで優しく色づきます。</li><li>更新情報ボタンを追加。新しい更新があると「NEW」が表示されます。</li></ul>
   <h3>v3.10 — 新機能</h3>
@@ -196,7 +197,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 
 <div id="preview" class="previewOverlay">
  <div class="previewCard">
-  <div class="previewTop"><b>プレビュー　v3.10.4 TEST</b><button onclick="hidePreview()">閉じる</button></div>
+  <div class="previewTop"><b>プレビュー　v3.10.4</b><button onclick="hidePreview()">閉じる</button></div>
   <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
  </div>
 </div>
