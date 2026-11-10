@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f5f7">
-<title>しお✦あんエディタ v3.10.3 TEST</title>
+<title>しお✦あんエディタ v3.10.4 TEST</title>
 <style>
 :root{--bg:#f3f4f6;--paper:#fff;--ink:#20242a;--muted:#8a9098;--line:#d9dde2;--btn:#fff;--accent:#426783;--warn:#c43b3b}
 body[data-theme="dark"]{--bg:#17191d;--paper:#22252a;--ink:#f2f3f5;--muted:#a7adb5;--line:#41464d;--btn:#2b2f35;--accent:#5e87a5;--warn:#ff7777}
@@ -94,13 +94,26 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 .releasePanel{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:15px;width:min(100%,440px);max-height:80dvh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.18)}
 .releaseHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
 .releaseHead strong{font-size:16px}.releasePanel h3{font-size:13px;margin:12px 0 5px}.releasePanel p,.releasePanel li{font-size:12px;line-height:1.65}.releasePanel ul{padding-left:19px;margin:5px 0}.releasePanel .releaseDate{font-size:11px;color:var(--muted)}
+
+/* Saved snippets: small, mobile-friendly modal */
+.snippetOverlay{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:110;display:none;align-items:center;justify-content:center;padding:14px}
+.snippetOverlay.open{display:flex}
+.snippetPanel{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:12px;width:min(560px,100%);max-height:88dvh;overflow:auto;padding:16px;box-shadow:0 12px 40px #0004}
+.snippetHead,.snippetItemHead,.snippetActions{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.snippetPanel h2{font-size:17px;margin:0}.snippetPanel h3{font-size:14px;margin:0}.snippetPanel p{font-size:12px;color:var(--muted)}
+.snippetPanel input,.snippetPanel textarea{width:100%;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px;margin:5px 0 9px;box-sizing:border-box}
+.snippetPanel textarea{min-height:135px;resize:vertical;font-size:14px}
+.snippetPanel button{border-radius:7px;padding:7px 10px;background:var(--paper);color:var(--ink);border:1px solid var(--line)}
+.snippetItem{border:1px solid var(--line);border-radius:9px;padding:10px;margin:9px 0}
+.snippetItem pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.5 inherit;max-height:64px;overflow:hidden;color:var(--muted);margin:5px 0 9px}
+.snippetPanel .snippetPrimary{background:var(--accent);color:white;border-color:var(--accent)}
 </style>
 </head>
 <body>
 <div class="app">
 <header class="top">
  <div class="brandrow">
-  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.10.3 TEST</small></div>
+  <div class="brand">しお✦あんエディタ <small>Lodestone Diary Editor　v3.10.4 TEST</small></div>
   <span class="credit">♡ Created by 塩餡</span><button class="updateBtn" type="button" onclick="showReleaseNotes()" aria-label="更新情報">更新<span id="updateNew" class="newBadge" hidden>NEW</span></button><select id="themeSelect" class="themeSelect" aria-label="配色テーマ" onchange="setTheme(this.value)"><option value="light">ライト</option><option value="dark">ダーク</option><option value="sakura">桜</option><option value="matcha">抹茶</option><option value="sepia">セピア</option><option value="midnight">星霜</option></select>
  </div>
  <div class="titleRow">
@@ -125,7 +138,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
   <span class="sep"></span>
   <div class="group"><button onclick="wrap('[left]','[/left]')">左</button><button onclick="wrap('[center]','[/center]')">中</button><button onclick="wrap('[right]','[/right]')">右</button></div>
   <span class="sep"></span>
-  <div class="group"><button onclick="addLink()">リンク</button><button onclick="addVideo()">動画</button><button onclick="addImageMarker()">画像メモ</button><button onclick="wrap('[hb]','[/hb]')">隠す</button></div><span class="sep"></span><div class="group"><button onclick="clearAll()">クリア</button></div>
+  <div class="group"><button onclick="showSnippets()">定型文</button><button onclick="addLink()">リンク</button><button onclick="addVideo()">動画</button><button onclick="addImageMarker()">画像メモ</button><button onclick="wrap('[hb]','[/hb]')">隠す</button></div><span class="sep"></span><div class="group"><button onclick="clearAll()">クリア</button></div>
  </div>
 <div id="colorTray" class="colorTray">
 <div class="colorTrayHead"><span>使用する文字色</span><button onclick="closeColorPalette()">閉じる</button></div>
@@ -153,9 +166,24 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 </div>
 
 
+
+<div id="snippetOverlay" class="snippetOverlay" role="dialog" aria-modal="true" aria-label="定型文" onclick="if(event.target===this)hideSnippets()">
+ <section class="snippetPanel">
+  <div class="snippetHead"><h2>📌 定型文</h2><button type="button" onclick="hideSnippets()">閉じる</button></div>
+  <p>登録した文章をカーソル位置に挿入できます。BBCodeや改行もそのまま保存します。</p>
+  <div id="snippetList"></div>
+  <hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+  <h3 id="snippetFormTitle">新しい定型文を登録</h3>
+  <label for="snippetName">登録名</label><input id="snippetName" maxlength="80" placeholder="例：いつもの冒頭">
+  <label for="snippetText">文章（タグもそのまま入力）</label><textarea id="snippetText" maxlength="10000" placeholder="ここに定型文を入力"></textarea>
+  <div class="snippetActions"><button type="button" onclick="resetSnippetForm()">入力をクリア</button><button type="button" class="snippetPrimary" onclick="saveSnippet()">定型文を保存</button></div>
+ </section>
+</div>
+
 <div id="releaseOverlay" class="releaseOverlay" role="dialog" aria-modal="true" aria-label="更新情報" onclick="if(event.target===this)hideReleaseNotes()">
  <section class="releasePanel">
   <div class="releaseHead"><strong>📋 更新情報</strong><button type="button" onclick="hideReleaseNotes()">閉じる</button></div>
+  <h3>v3.10.4 — 定型文</h3><p>挨拶や告知リンクなどを名前付きで登録し、本文のカーソル位置に挿入できます。定型文はこの端末のブラウザに保存されます。</p>
   <h3>v3.10.1 — 配色と更新案内</h3>
   <ul><li>6種類の配色テーマを調整。桜・抹茶・セピアも背景や入力欄まで優しく色づきます。</li><li>更新情報ボタンを追加。新しい更新があると「NEW」が表示されます。</li></ul>
   <h3>v3.10 — 新機能</h3>
@@ -168,7 +196,7 @@ textarea{flex:1 1 auto;min-height:0;width:100%;resize:none;overflow-y:auto;-webk
 
 <div id="preview" class="previewOverlay">
  <div class="previewCard">
-  <div class="previewTop"><b>プレビュー　v3.10.3 TEST</b><button onclick="hidePreview()">閉じる</button></div>
+  <div class="previewTop"><b>プレビュー　v3.10.4 TEST</b><button onclick="hidePreview()">閉じる</button></div>
   <div id="pt" class="previewTitle">タイトル</div><div id="pb" class="previewBody"></div>
  </div>
 </div>
@@ -382,11 +410,45 @@ function clearAll(){
  localStorage.removeItem('lodestoneBody');
  changed();body.focus();
 }
-const releaseVersion='3.10.3';
+
+// Snippets are local to this browser. Do not insert any example text automatically.
+const snippetKey='shioanSnippetsV1';
+let snippets=[],editingSnippet=-1;
+try{const stored=JSON.parse(localStorage.getItem(snippetKey)||'[]');if(Array.isArray(stored))snippets=stored.filter(x=>x&&typeof x.name==='string'&&typeof x.text==='string').slice(0,100)}catch(_){snippets=[]}
+function showSnippets(){rememberSelection();renderSnippets();document.getElementById('snippetOverlay').classList.add('open')}
+function hideSnippets(){document.getElementById('snippetOverlay').classList.remove('open')}
+function resetSnippetForm(){editingSnippet=-1;document.getElementById('snippetName').value='';document.getElementById('snippetText').value='';document.getElementById('snippetFormTitle').textContent='新しい定型文を登録'}
+function renderSnippets(){
+ const list=document.getElementById('snippetList');list.replaceChildren();
+ if(!snippets.length){const p=document.createElement('p');p.textContent='まだ登録がありません。下の欄から追加できます。';list.appendChild(p)}
+ snippets.forEach((item,i)=>{
+  const div=document.createElement('div');div.className='snippetItem';
+  const head=document.createElement('div');head.className='snippetItemHead';
+  const name=document.createElement('strong');name.textContent=(i+1)+'．'+item.name;head.appendChild(name);div.appendChild(head);
+  const pre=document.createElement('pre');pre.textContent=item.text;div.appendChild(pre);
+  const actions=document.createElement('div');actions.className='snippetActions';
+  const insert=document.createElement('button');insert.type='button';insert.className='snippetPrimary';insert.textContent='挿入';insert.onclick=()=>{hideSnippets();insertTextAtCursor(item.text)};
+  const edit=document.createElement('button');edit.type='button';edit.textContent='編集';edit.onclick=()=>{editingSnippet=i;document.getElementById('snippetName').value=item.name;document.getElementById('snippetText').value=item.text;document.getElementById('snippetFormTitle').textContent='定型文を編集';document.getElementById('snippetName').focus()};
+  const del=document.createElement('button');del.type='button';del.textContent='削除';del.onclick=()=>{if(confirm('「'+item.name+'」を削除しますか？')){snippets.splice(i,1);persistSnippets();resetSnippetForm();renderSnippets()}};
+  actions.append(insert,edit,del);div.appendChild(actions);list.appendChild(div);
+ });
+}
+function persistSnippets(){try{localStorage.setItem(snippetKey,JSON.stringify(snippets));return true}catch(_){alert('定型文を保存できませんでした。ブラウザの保存容量や設定を確認してください。');return false}}
+function saveSnippet(){
+ const name=document.getElementById('snippetName').value.trim(),value=document.getElementById('snippetText').value;
+ if(!name||!value.trim()){alert('登録名と文章を入力してください');return}
+ const before=snippets.slice();
+ if(editingSnippet>=0&&editingSnippet<snippets.length)snippets[editingSnippet]={name,text:value};
+ else{if(snippets.length>=100){alert('定型文は最大100件まで登録できます');return}snippets.push({name,text:value})}
+ if(!persistSnippets()){snippets=before;return}
+ resetSnippetForm();renderSnippets();
+}
+
+const releaseVersion='3.10.4';
 function updateReleaseBadge(){const badge=document.getElementById('updateNew');badge.hidden=localStorage.getItem('shioanReleaseSeen')===releaseVersion}
 function showReleaseNotes(){document.getElementById('releaseOverlay').classList.add('open');localStorage.setItem('shioanReleaseSeen',releaseVersion);updateReleaseBadge()}
 function hideReleaseNotes(){document.getElementById('releaseOverlay').classList.remove('open')}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')hideReleaseNotes()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){hideReleaseNotes();hideSnippets()}});
 const validThemes=['light','dark','sakura','matcha','sepia','midnight'];
 function setTheme(t){if(!validThemes.includes(t))t='light';document.body.dataset.theme=t;document.getElementById('themeSelect').value=t;localStorage.setItem('shioanTheme',t)}
 title.value=localStorage.getItem('lodestoneTitle')||'';body.value=localStorage.getItem('lodestoneBody')||'';setTheme(localStorage.getItem('shioanTheme')||(localStorage.getItem('lodestoneDark')==='1'?'dark':'light'));title.oninput=changed;body.oninput=changed;changed();rememberSelection();updateReleaseBadge();
